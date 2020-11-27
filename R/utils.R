@@ -38,3 +38,93 @@ format_ts_date <- function(date, frequency){
     date <- date[1] + (date[2] - 1) / frequency
   date
 }
+
+j2r_ldt<-function(ldt){
+  if (is.jnull(ldt))
+    return (NULL)
+  dt<-.jcall(ldt, "Ljava/time/LocalDate;", "toLocalDate")
+  return (as.Date(.jcall(dt, "S", "toString")))
+}
+
+j2r_dt<-function(dt){
+  if (is.jnull(dt))
+    return (NULL)
+  return (as.Date(.jcall(dt, "S", "toString")))
+}
+
+r2j_dt<-function(dt){
+  jdt<-.jnew("java/lang/String", as.character(dt))
+  return (.jcall("java/time/LocalDate", "Ljava/time/LocalDate;", "parse", .jcast(jdt, "java/lang/CharSequence")))
+}
+
+r2j_ldt<-function(dt){
+  jdt<-r2j_dt(dt)
+  return (.jcall(jdt, "Ljava/time/LocalDateTime;", "atStartOfDay"))
+}
+
+jd2r_span <- function(jspan){
+
+  type<-.jcall(.jcall(jspan, "Ldemetra/timeseries/TimeSelector$SelectionType;", "getType"), "S","name")
+  d0<-j2r_ldt(.jcall(jspan, "Ljava/time/LocalDateTime;", "getD0"))
+  d1<-j2r_ldt(.jcall(jspan, "Ljava/time/LocalDateTime;", "getD1"))
+  n0<-.jcall(jspan, "I", "getN0")
+  n1<-.jcall(jspan, "I", "getN1")
+
+  return (structure(list(type=type, d0=d0, d1=d1, n0=n0, n1=n1), class= "JD3SPAN"))
+}
+
+r2jd_span <- function(span){
+
+  if (span$type == "All") return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "all"))
+  if (span$type == "First")return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "first", as.integer(span$n0)))
+  if (span$type == "Last")return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "last", as.integer(span$n1)))
+  if (span$type == "Excluding")return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "excluding", as.integer(span$n0), as.integer(span$n1)))
+  if (span$type == "From"){
+    return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "from", as.integer(span$n0)))
+  }
+  return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "none"))
+}
+
+
+#' Title
+#'
+#' @param span
+#'
+#' @return
+#' @export
+#'
+#' @examples
+print.JD3SPAN<-function(span){
+  type<-span$type
+  d0<-span$d0
+  d1<-span$d1
+  n0<-span$n0
+  n1<-span$n1
+
+  x <- if (type=="All") {"All"} else if (type=="From") {paste("From",d0, sep=" ")}
+  else if (type=="To") {paste("Until",d1, sep=" ")}
+  else if (type=="Between") {paste(d0,d1,sep=" - ")}
+  else if (type=="First") {paste("All but first",n0,"periods", sep=" ")}
+  else if (type=="Last") {paste("All but last",n1,"periods", sep=" ")}
+  else if (type=="Excluding") {paste("All but first",n0,"periods and last",n1,"periods", sep=" ")}
+
+  print(x)
+}
+
+arimaCoef_jd2r <- function(jparams){
+  if (is.jnull(jparams))
+    return(NULL)
+  param<-.jcastToArray(jparams)
+  len <- length(param)
+  if (len==0)
+    return (NULL)
+  param_name <- deparse(substitute(jparams))
+  Type <- sapply(param, function(x) .jcall(.jcall(x, "Ldemetra/data/ParameterType;", "getType"), "S", "name"))
+  Value <- sapply(param, function(x) .jcall(x, "D", "getValue"))
+  data_param <- data.frame(Type = Type, Value = Value)
+  rownames(data_param) <- sprintf("%s(%i)",
+                                  param_name,
+                                  1:len)
+  data_param
+}
+

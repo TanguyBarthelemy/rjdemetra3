@@ -35,6 +35,6 @@ Collate:
     'zzz.R'
     'jd3_rslts.R'
     'regarima_specTS.R'
+    'utils.R'
     'spec_rjd.R'
     'user_defined.R'
-    'utils.R'

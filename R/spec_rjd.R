@@ -1,58 +1,126 @@
-jd_span <- function(jspan){
+#' @include utils.R
 
-  type<-jspan$getType()$name()
-  d0<-jspan$getD0()
-  d1<-jspan$getD1()
-  n0<-jspan$getN0()
-  n1<-jspan$getN1()
 
-  return (structure(list(type=type, d0=d0, d1=d1, n0=n0, n1=n1), class= "JD3SPAN"))
+jd2r_spec_tramo_outlier<-function(spec){
+  joutlier<-spec$getOutliers()
+  jspan <-joutlier$getSpan()
+
+  enabled<-joutlier$isUsed()
+  span<-jd2r_span(jspan)
+  ao <-.jcall(joutlier, "Z", "isAo")
+  ls <-.jcall(joutlier, "Z", "isLs")
+  tc <-.jcall(joutlier, "Z", "isTc")
+  so <-.jcall(joutlier, "Z", "isSo")
+  cv <-.jcall(joutlier, "D", "getCriticalValue")
+  eml <-.jcall(joutlier, "Z", "isMaximumLikelihood")
+  tcrate <-.jcall(joutlier, "D", "getDeltaTC")
+  return (list(enabled=enabled,span=span,ao=ao,ls=ls,tc=tc,so=so,cv=cv,eml=eml,tcrate=tcrate))
 }
 
-#' Title
-#'
-#' @param span
-#'
-#' @return
-#' @export
-#'
-#' @examples
-print.JD3SPAN<-function(span){
-  type<-span$type
-  d0<-span$d0
-  d1<-span$d1
-  n0<-span$n0
-  n1<-span$n1
+jd2r_spec_tramo_estimate<-function(spec){
+  jestimate<-.jcall(spec, "Ldemetra/tramo/EstimateSpec;", "getEstimate")
+  jspan <- .jcall(jestimate, "Ldemetra/timeseries/TimeSelector;", "getSpan")
+  span<-jd2r_span(jspan)
+  tol <-.jcall(jestimate, "D", "getTol")
+  eml <-.jcall(jestimate, "Z", "isMaximumLikelihood")
+  urfinal <-.jcall(jestimate, "D", "getUbp")
+  return (list(span=span,tol=tol,eml=eml,urfinal=urfinal))
+}
 
-  x <- if (type=="All") {"All"} else if (type=="From") {paste("From",d0, sep=" ")}
-  else if (type=="To") {paste("Until",d1, sep=" ")}
-  else if (type=="Between") {paste(d0,d1,sep=" - ")}
-  else if (type=="First") {paste("All but first",n0,"periods", sep=" ")}
-  else if (type=="Last") {paste("All but last",n1,"periods", sep=" ")}
-  else if (type=="Excluding") {paste("All but first",n0,"periods and last",n1,"periods", sep=" ")}
+jd2r_spec_tramo_arima<-function(spec){
+  jarima<-.jcall(spec, "Ldemetra/arima/SarimaSpec;", "getArima")
+  p <-.jcall(jarima, "I", "getP")
+  d <-.jcall(jarima, "I", "getD")
+  q <-.jcall(jarima, "I", "getQ")
+  bp <-.jcall(jarima, "I", "getBp")
+  bd <-.jcall(jarima, "I", "getBd")
+  bq <-.jcall(jarima, "I", "getBq")
+  coef.spec <- NA
+  if (! .jcall(jarima, "Z", "isUndefined")){
+    coef <- TRUE
+    phi <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getPhi")
+    bphi <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getBphi")
+    theta <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getTheta")
+    btheta <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getBtheta")
+    coef.spec <-
+      rbind(arimaCoef_jd2r(phi),
+            arimaCoef_jd2r(bphi),
+            arimaCoef_jd2r(theta),
+            arimaCoef_jd2r(btheta))
 
-  print(x)
+  }
+  return (list(p=p,d=d,q=q,bp=bp,bd=bd,bq=bq,coef.spec=coef.spec))
+}
+
+jd2r_spec_tramo_automdl<-function(spec){
+  jami<-.jcall(spec, "Ldemetra/tramo/AutoModelSpec;", "getAutoModel")
+  enabled <-.jcall(jami, "Z", "isEnabled")
+  acceptdefault <-.jcall(jami, "Z", "isAcceptDefault")
+  cancel <-.jcall(jami, "D", "getCancel")
+  ub1 <-.jcall(jami, "D", "getUb1")
+  ub2 <-.jcall(jami, "D", "getUb2")
+  armalimit <-.jcall(jami, "D", "getTsig")
+  reducecv <-.jcall(jami, "D", "getPc")
+  ljungboxlimit <-.jcall(jami, "D", "getPcr")
+  compare <-.jcall(jami, "Z", "isAmiCompare")
+  return (list(enabled=enabled,acceptdefault=acceptdefault,cancel=cancel,ub1=ub1,ub2=ub2,
+             armalimit=armalimit,reducecv=reducecv,ljungboxlimit=ljungboxlimit,compare=compare))
+}
+
+jd2r_spec_tramo_easter<-function(jeaster){
+  type <- .jcall(.jcall(jeaster, "Ldemetra/tramo/EasterSpec$Type;","getType"), "S", "name")
+  julian <-.jcall(jeaster, "Z", "isJulian")
+  duration <-.jcall(jeaster, "I", "getDuration")
+  test <-.jcall(jeaster, "Z", "isTest")
+  return (list(type=type,julian=julian,duration=duration,test=test))
+}
+
+jd2r_spec_tramo_td<-function(jtd){
+  option<-"None"
+  stocktd<-0
+  holidays<-NULL
+  userdefined=NULL
+  leapyear<-"None"
+  type<-"None"
+  test <-.jcall(jtd, "Z", "isTest")
+  mauto <-.jcall(.jcall(jtd, "Ldemetra/tramo/TradingDaysSpec$AutoMethod;", "getAutomaticMethod"), "S", "name")
+  pftd <-.jcall(jtd, "D", "getProbabilityForFTest")
+  if (.jcall(jtd, "Z", "isUsed")){
+    if (.jcall(jtd, "Z", "isUserDefined")){
+      option <- "UserDefined"
+      userdefined<-.jcall(jtd, "[S", "getUserVariables")
+    }else if (.jcall(jtd, "Z", "isStockTradingDays")){
+      option <- "Stock"
+      stocktd<-.jcall(jtd, "I", "getStockTradingDays")
+    }else{
+      if (.jcall(jtd, "Z", "isHolidays")){
+        option <- "Holidays"
+        .jcall(jtd, "S", "getHolidays")
+      }else{
+        option <- "Default"
+      }
+      leapyear<-.jcall(.jcall(jtd, "Ldemetra/timeseries/calendars/LengthOfPeriodType;", "getLengthOfPeriodType"), "S", "name")
+      type<-.jcall(.jcall(jtd, "Ldemetra/timeseries/regression/TradingDaysType;", "getTradingDaysType"), "S", "name")
+    }
+  }
+  return (list(option=option,stocktd=stocktd,holydays=holidays,userdefined=userdefined,mauto=mauto,pftd =pftd,leapyear=leapyear,type=type,test=test))
 }
 
 
+jd2r_spec_tramo_regression<-function(spec){
+  jregression<-.jcall(spec, "Ldemetra/tramo/RegressionSpec;", "getRegression")
+  mu <-.jcall(jregression, "Z", "isMean")
 
-arimaCoef_jd2r <- function(jparams){
-  if (is.jnull(jparams))
-    return(NULL)
-  param<-.jcastToArray(jparams)
-  len <- length(param)
-  if (len==0)
-    return (NULL)
-  param_name <- deparse(substitute(jparams))
-  Type <- sapply(param, function(x) x$getType()$name())
-  Value <- sapply(param, function(x) x$getValue())
-  data_param <- data.frame(Type = Type, Value = Value)
-  rownames(data_param) <- sprintf("%s(%i)",
-                                  param_name,
-                                  1:len)
-  data_param
+  #Calendar
+  jcal<-.jcall(jregression, "Ldemetra/tramo/CalendarSpec;", "getCalendar")
+  jtd<-.jcall(jcal, "Ldemetra/tramo/TradingDaysSpec;", "getTradingDays")
+  jeaster<-.jcall(jcal, "Ldemetra/tramo/EasterSpec;", "getEaster")
+
+  return (list(
+      mean=mu,
+      tradingdays=jd2r_spec_tramo_td(jtd),
+      easter=jd2r_spec_tramo_easter(jeaster)))
 }
-
 
 #' Title
 #'
@@ -65,138 +133,106 @@ arimaCoef_jd2r <- function(jparams){
 #' @export
 #'
 #' @examples
-spec_tramo_jd2r <- function(spec = NA, context_dictionary = NULL,
+spec_tramo_jd2r <- function(spec, context_dictionary = NULL,
                             extra_info = FALSE, freq = NA){
 
   # Transform
-  jtransform<-spec$getTransform()
-  jspan<-jtransform$getSpan()
-  span<-jd_span(jspan)
-  preliminary.check<-jtransform$isPreliminaryCheck()
-  transform.fct<-jtransform$getFct()
-  transform.function<-jtransform$getFunction()$name()
+  jtransform<-.jcall(spec, "Ldemetra/tramo/TransformSpec;", "getTransform")
+  jspan<-.jcall(jtransform, "Ldemetra/timeseries/TimeSelector;", "getSpan")
+  span<-jd2r_span(jspan)
+  preliminary.check<-.jcall(jtransform, "Z", "isPreliminaryCheck")
+  transform.fct<-.jcall(jtransform, "D", "getFct")
+  transform.function<-.jcall(.jcall(jtransform, "Ldemetra/modelling/TransformationType;", "getFunction"), "S", "name")
 
-  # Estimate
-  jestimate<-spec$getEstimate()
-  jspan <- jestimate$getSpan()
-  estimate.span<-jd_span(jspan)
-  estimate.tol <-jestimate$getTol()
-  estimate.eml <-jestimate$isMaximumLikelihood()
-  estimate.urfinal <-jestimate$getUbp()
-
-  #ARIMA / Auto-modelling
-
-  jarima<-spec$getArima()
-
-  arima.p <-jarima$getP()
-  arima.d <-jarima$getD()
-  arima.q <-jarima$getQ()
-  arima.bp <-jarima$getBp()
-  arima.bd <-jarima$getBd()
-  arima.bq <-jarima$getBq()
-  arima.coef <- FALSE
-  arima.coef.spec <- NA
-  if (! jarima$isUndefined()){
-    arima.coef <- TRUE
-    phi <- jarima$getPhi()
-    bphi <- jarima$getBPhi()
-    theta <- jarima$getTheta()
-    btheta <- jarima$getBTheta()
-    arima_coefficients_spec <-
-      rbind(arimaCoef_jd2r(phi),
-            arimaCoef_jd2r(bphi),
-            arimaCoef_jd2r(theta),
-            arimaCoef_jd2r(btheta))
-  }
-
-  jami<-spec$getAutoModel()
-  automdl.enabled <-jami$isEnabled()
-  automdl.acceptdefault <-jami$isAcceptDefault()
-  automdl.cancel <-jami$getCancel()
-  automdl.ub1 <-jami$getUb1()
-  automdl.ub2 <-jami$getUb2()
-  automdl.armalimit <-jami$getTsig()
-  automdl.reducecv <-jami$getPcr()
-  automdl.ljungboxlimit <-jami$getPc()
-  automdl.compare <-jami$isAmiCompare()
-
-  # Regression
-  jregression<-spec$getRegression()
-  arima.mu <-jregression$isMean()
-
-  #Calendar
-  jcal<-jregression$getCalendar()
-  jtd<-jcal$getTradingDays()
-  tradingdays.option<-"None"
-  tradingdays.stocktd<-0
-  tradingdays.test<-F
-  tradingdays.holidays<-NULL
-  tradingdays.leapyear<-"None"
-  tradingdays.type<-"None"
-  tradingdays.mauto <-"None"
-  tradingdays.pftd <-0.95
-  if (jtd$isUsed()){
-    if (jtd$isUserDefined()){
-      tradingdays.option <- "UserDefined"
-    }else if (jtd$isStockTradingDays()){
-      tradingdays.option <- "Stock"
-      tradingdays.stocktd<-jtd$stockTradingDays()
-      tradingdays.test <-jtd$isTest()
-    }else{
-      if (jtd$isHolidays()){
-        tradingdays.option <- "Holidays"
-        jtd$getHolidays()
-      }else{
-        tradingdays.option <- "Default"
-      }
-      tradingdays.leapyear<-jtd$getLengthOfPeriodType()$name()
-      tradingdays.type<-jtd$getTradingDaysType()$name()
-      tradingdays.test <-jtd$isTest()
-      tradingdays.mauto <-jtd$getAutomaticMethod()$name()
-      tradingdays.pftd <-jtd$getProbabilityForFTest()
-     }
-  }
-
-  jeaster<-jcal$getEaster()
-  easter.type <- jeaster$getType()$name()
-  easter.julian <-jeaster$isJulian()
-  easter.duration <-jeaster$getDuration()
-  easter.test <-jeaster$isTest()
-
-  #Outlier
-  joutlier<-spec$getOutliers()
-  jspan <-joutlier$getSpan()
-
-  outlier.enabled <-joutlier$isUsed()
-  outlier.span<-jd_span(jspan)
-  outlier.ao <-joutlier$isAo()
-  outlier.tc <-joutlier$isTc()
-  outlier.ls <-joutlier$isLs()
-  outlier.so <-joutlier$isSo()
-  outlier.cv <-joutlier$getCriticalValue()
-  outlier.usedefcv <-outlier.cv==0
-  outlier.eml <-joutlier$isMaximumLikelihood()
-  outlier.tcrate <-joutlier$getDeltaTC()
   userdef_spec<-NULL
 
   return(structure(list(
     basic=list(preliminary.check = preliminary.check, span=span),
     transform=list(fn = transform.function,fct = transform.fct),
-    estimate=list(
-        span=estimate.span,
-        tol = estimate.tol,eml = estimate.eml, urfinal = estimate.urfinal),
-    regression=list(userdef_spec = userdef_spec,
-                    tradingdays=list( mauto = tradingdays.mauto,pftd = tradingdays.pftd,option = tradingdays.option,
-                 leapyear = tradingdays.leapyear,stocktd = tradingdays.stocktd,test = tradingdays.test),
-                 easter=list(type = easter.type,julian = easter.julian,duration = easter.duration,test = easter.test)),
-    outlier=list(enabled = outlier.enabled,
-                 span= outlier.span,
-                 ao = outlier.ao, tc = outlier.tc,ls = outlier.ls,so = outlier.so,usedefcv = outlier.usedefcv,
-                 cv = outlier.cv,eml = outlier.eml,tcrate = outlier.tcrate),
-    automdl=list(enabled = automdl.enabled, acceptdefault = automdl.acceptdefault,cancel = automdl.cancel,ub1 = automdl.ub1,
-                 ub2 = automdl.ub2,armalimit = automdl.armalimit,reducecv = automdl.reducecv,
-                 ljungboxlimit = automdl.ljungboxlimit,compare = automdl.compare),
-    arima=list(mu = arima.mu,p = arima.p, d = arima.d,q = arima.q,bp = arima.bp,bd = arima.bd,bq = arima.bq,
-              coef = arima.coef,coef.spec = arima.coef.spec)), class="JD3TRAMOSPEC"))
+    estimate=jd2r_spec_tramo_estimate(spec),
+    regression=jd2r_spec_tramo_regression(spec),
+    outlier=jd2r_spec_tramo_outlier(spec),
+    automdl=jd2r_spec_tramo_automdl(spec),
+    arima=jd2r_spec_tramo_arima(spec)), class="JD3TRAMOSPEC"))
+}
+
+r2jd_tramo_arima<-function(arima){
+
+  jbuilder<-.jcall("demetra/arima/SarimaSpec", "Ldemetra/arima/SarimaSpec$Builder;", "builder")
+  jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "d", as.integer(arima$d))
+  jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bd", as.integer(arima$bd))
+  if (is.na(arima$coef.spec)){
+    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "p", as.integer(arima$p))
+    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "q", as.integer(arima$q))
+    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bp", as.integer(arima$bp))
+    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bq", as.integer(arima$bq))
+  }else{
+    # TODO
+    stop("Not implemented yet")
+  }
+  return (jbuilder$build())
+}
+
+r2jd_tramo_automdl<-function(ami){
+
+  jbuilder<-.jcall("demetra/tramo/AutoModelSpec", "Ldemetra/tramo/AutoModelSpec$Builder;", "builder")
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "enabled", ami$enabled)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "acceptDefault", ami$acceptdefault)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "cancel", ami$cancel)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "ub1", ami$ub1)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "ub2", ami$ub2)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "tsig", ami$armalimit)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "pc", ami$reducecv)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "pcr", ami$ljungboxlimit)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/AutoModelSpec$Builder;", "amiCompare", ami$compare)
+  jval<-.jcall(jbuilder, "Ldemetra/util/Validatable;", "build")
+  return (.jcast(jval, "demetra/tramo/AutoModelSpec"))
 
 }
+
+r2jd_tramo_outlier<-function(outlier){
+  jbuilder<-.jcall("demetra/tramo/OutlierSpec", "Ldemetra/tramo/OutlierSpec$Builder;", "builder")
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/OutlierSpec$Builder;", "span", r2jd_span(outlier$span))
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/OutlierSpec$Builder;", "ao", outlier$ao)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/OutlierSpec$Builder;", "ls", outlier$ls)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/OutlierSpec$Builder;", "tc", outlier$tc)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/OutlierSpec$Builder;", "so", outlier$so)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/OutlierSpec$Builder;", "criticalValue", outlier$cv)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/OutlierSpec$Builder;", "maximumLikelihood", outlier$eml)
+  jval<-.jcall(jbuilder, "Ldemetra/util/Validatable;", "build")
+  return (.jcast(jval, "demetra/tramo/OutlierSpec"))
+}
+
+#' Title
+#'
+#' @param spec
+#'
+#' @return
+#' @export
+#'
+#' @examples
+spec_tramo_r2jd<-function(spec){
+
+  jbuilder<-.jcall("demetra/tramo/TramoSpec", "Ldemetra/tramo/TramoSpec$Builder;", "builder")
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "arima", r2jd_tramo_arima(spec$arima))
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "autoModel", r2jd_tramo_automdl(spec$automdl))
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "outliers", r2jd_tramo_outlier(spec$outlier))
+
+  return (jbuilder$build())
+}
+
+#' Title
+#'
+#' @param name
+#'
+#' @return
+#' @export
+#'
+#' @examples
+spec_tramo_default<-function(name){
+  return (.jcall("demetra/tramo/TramoSpec", "Ldemetra/tramo/TramoSpec;", "fromString", name))
+}
+
+
+
+
