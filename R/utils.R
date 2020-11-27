@@ -111,7 +111,7 @@ print.JD3SPAN<-function(span){
   print(x)
 }
 
-arimaCoef_jd2r <- function(jparams){
+jd2r_parameters <- function(jparams){
   if (is.jnull(jparams))
     return(NULL)
   param<-.jcastToArray(jparams)
@@ -128,3 +128,28 @@ arimaCoef_jd2r <- function(jparams){
   data_param
 }
 
+jd2r_spec_benchmarking<-function(spec){
+  enabled<-.jcall(spec, "Z", "isEnabled")
+  forecast<-.jcall(spec, "Z", "isForecast")
+  target<-.jcall(.jcall(spec, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Target;", "getTarget"), "S", "name")
+  rho<-.jcall(spec, "D", "getRho")
+  lambda<-.jcall(spec, "D", "getLambda")
+  bias<-.jcall(.jcall(spec, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$BiasCorrection;", "getBiasCorrection"), "S", "name")
+  return (list(enabled=enabled, forecast=forecast, target=target,
+               rho=rho, lambda=lambda, bias=bias))
+}
+
+r2jd_spec_benchmarking<-function(spec){
+  jbuilder<-.jcall("demetra/sa/benchmarking/SaBenchmarkingSpec", "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "builder")
+  jtarget<-.jcall("demetra/sa/benchmarking/SaBenchmarkingSpec$Target", "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Target;", "valueOf", spec$target)
+  jbias<-.jcall("demetra/sa/benchmarking/SaBenchmarkingSpec$BiasCorrection", "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$BiasCorrection;", "valueOf", spec$bias)
+
+  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "enabled", spec$enabled)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "forecast", spec$forecast)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "target", jtarget)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "rho", spec$rho)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "lambda", spec$lambda)
+  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "biasCorrection", jbias)
+  jval<-.jcall(jbuilder, "Ldemetra/util/Validatable;", "build")
+  return (.jcast(jval, "demetra/sa/benchmarking/SaBenchmarkingSpec"))
+}
