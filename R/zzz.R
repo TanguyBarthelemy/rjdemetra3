@@ -1,7 +1,6 @@
 #' @import rJava
 NULL
 
-jd_clobj <- NULL
 
 .onLoad <- function(libname, pkgname) {
   # For debugging: to see if Jars are effectively loaded
@@ -20,6 +19,4 @@ jd_clobj <- NULL
     cat("Java requirements fullfilled, found version ",jversion,"\n")
   }
 
-  # often used while calling java
-  jd_clobj <<- .jcall("java/lang/Class", "Ljava/lang/Class;", "forName", "java.lang.Object")
 }

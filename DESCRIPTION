@@ -35,4 +35,7 @@ Collate:
     'zzz.R'
     'jd3_rslts.R'
     'utils.R'
+    'regarima_rslts.R'
+    'tramoseats.R'
+    'tramoseats_rslts.R'
     'tramoseats_spec.R'

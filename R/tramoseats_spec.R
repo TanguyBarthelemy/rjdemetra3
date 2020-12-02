@@ -1,5 +1,5 @@
 #' @include utils.R
-
+NULL
 
 jd2r_spec_tramo_outlier<-function(spec){
   joutlier<-spec$getOutliers()
