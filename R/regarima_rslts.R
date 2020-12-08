@@ -23,6 +23,7 @@ regarima_rslts <- function(jrslts){
                 forecast = NULL), class="JD3REGARIMA"))
   return (structure(list(
     arima=jd2r_rslts_arima(jrslts),
+    regression=jd2r_rslts_regression(jrslts),
     likelihood=jd2r_rslts_likelihood(jrslts)
   ), class="JD3REGARIMA"))
 }
@@ -49,11 +50,11 @@ jd2r_rslts_arima<-function(jrslts){
     if (arima.orders[1]!=0){
       arima.description <- c(arima.description,paste0("Phi(",1:arima.orders[1],")"))
     }
-    if (arima.orders[3]!=0){
-      arima.description <- c(arima.description, paste0("Theta(",1:arima.orders[3],")"))
-    }
     if (arima.orders[4]!=0){
       arima.description <- c(arima.description, paste0("BPhi(",1:arima.orders[4],")"))
+    }
+    if (arima.orders[3]!=0){
+      arima.description <- c(arima.description, paste0("Theta(",1:arima.orders[3],")"))
     }
     if (arima.orders[6]!=0){
       arima.description <- c(arima.description, paste0("BTheta(",1:arima.orders[6],")"))
@@ -83,3 +84,13 @@ jd2r_rslts_likelihood<-function(jrslts){
   return (list(nparams=np, nobs=nobs, neffective=neff, loglikelihood=ll, adjustedll=adjll, aic=aic,
                aicc=aicc, bic=bic, bicc=bicc, scores=scores))
 }
+
+jd2r_rslts_regression<-function(jrslts){
+  log<-proc_bool(jrslts, "log")
+  adjust<-proc_bool(jrslts, "adjust")
+  coef<-proc_vector(jrslts,"regression.coefficients")
+  coefdesc<-proc_vector(jrslts,"regression.description")
+  covar<-proc_matrix(jrslts, "regression.covar")
+  return (list(log=log, adjust=adjust, coef=coef, coefdesc=coefdesc, covar=covar))
+}
+
