@@ -40,6 +40,7 @@ jd2r_rslts_arima<-function(jrslts){
   if (!is.null(arima.est)){
 
     pcov <- proc_matrix(jrslts,"max.pcovar")
+    pcorr <- proc_matrix(jrslts,"max.pcorr")
     arima.se  <- sqrt(diag(pcov))
     arima.tstat <- arima.est/arima.se
     arima.tstat[arima.se==0] <- NA
@@ -65,7 +66,7 @@ jd2r_rslts_arima<-function(jrslts){
     arima.coefficients = NULL
   }
 
-  return (list(orders=arima.orders, coefficients=arima.coefficients))
+  return (list(orders=arima.orders, coefficients=arima.coefficients, coefficients.cov=pcov, coefficients.corr=pcorr))
 
 }
 
@@ -90,7 +91,16 @@ jd2r_rslts_regression<-function(jrslts){
   adjust<-proc_bool(jrslts, "adjust")
   coef<-proc_vector(jrslts,"regression.coefficients")
   coefdesc<-proc_vector(jrslts,"regression.description")
+  vtype<-proc_vector(jrslts,"regression.type")
   covar<-proc_matrix(jrslts, "regression.covar")
-  return (list(log=log, adjust=adjust, coef=coef, coefdesc=coefdesc, covar=covar))
+
+  reg.se  <- sqrt(diag(covar))
+  reg.tstat <- coef/reg.se
+  reg.tstat[reg.se==0] <- NA
+  reg <- cbind(coef,reg.se,reg.tstat)
+  rownames(reg) <- coefdesc
+  colnames(reg) <- c("Estimate","Std. Error","T-stat")
+
+  return (list(log=log, adjust=adjust, variables=reg, vartype=vtype, covar=covar))
 }
 
