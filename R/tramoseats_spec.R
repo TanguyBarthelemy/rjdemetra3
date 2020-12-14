@@ -27,32 +27,6 @@ jd2r_spec_tramo_estimate<-function(spec){
   return (list(span=span,tol=tol,eml=eml,urfinal=urfinal))
 }
 
-jd2r_spec_tramo_arima<-function(spec){
-  jarima<-.jcall(spec, "Ldemetra/arima/SarimaSpec;", "getArima")
-  p <-.jcall(jarima, "I", "getP")
-  d <-.jcall(jarima, "I", "getD")
-  q <-.jcall(jarima, "I", "getQ")
-  bp <-.jcall(jarima, "I", "getBp")
-  bd <-.jcall(jarima, "I", "getBd")
-  bq <-.jcall(jarima, "I", "getBq")
-  coef.spec <- NA
-  if (! .jcall(jarima, "Z", "isUndefined")){
-    coef <- TRUE
-    phi <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getPhi")
-    bphi <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getBphi")
-    theta <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getTheta")
-    btheta <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getBtheta")
-    coef.spec <-
-      rbind(jd2r_parameters(phi),
-            jd2r_parameters(bphi),
-            jd2r_parameters(theta),
-            spec<-spec_tramo_default("TRfull")
-(btheta))
-
-  }
-  return (list(p=p,d=d,q=q,bp=bp,bd=bd,bq=bq,coef.spec=coef.spec))
-}
-
 jd2r_spec_tramo_automdl<-function(spec){
   jami<-.jcall(spec, "Ldemetra/tramo/AutoModelSpec;", "getAutoModel")
   enabled <-.jcall(jami, "Z", "isEnabled")
@@ -154,7 +128,7 @@ jd2r_spec_tramo<- function(spec, context_dictionary = NULL,
     regression=jd2r_spec_tramo_regression(spec),
     outlier=jd2r_spec_tramo_outlier(spec),
     automdl=jd2r_spec_tramo_automdl(spec),
-    arima=jd2r_spec_tramo_arima(spec)), class="JD3TRAMOSPEC"))
+    arima=jd2r_spec_arima(spec)), class="JD3TRAMOSPEC"))
 }
 
 r2jd_tramo_transform<-function(spec){
@@ -176,24 +150,6 @@ r2jd_tramo_estimate<-function(estimate){
   jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/EstimateSpec$Builder;", "ubp", estimate$urfinal)
   jval<-.jcall(jbuilder, "Ldemetra/util/Validatable;", "build")
   return (.jcast(jval, "demetra/tramo/EstimateSpec"))
-}
-
-r2jd_tramo_arima<-function(arima){
-
-  jbuilder<-.jcall("demetra/arima/SarimaSpec", "Ldemetra/arima/SarimaSpec$Builder;", "builder")
-  jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "d", as.integer(arima$d))
-  jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bd", as.integer(arima$bd))
-  if (is.na(arima$coef.spec)){
-    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "p", as.integer(arima$p))
-    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "q", as.integer(arima$q))
-    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bp", as.integer(arima$bp))
-    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bq", as.integer(arima$bq))
-  }else{
-    # TODO
-    stop("Not implemented yet")
-  }
-  jval<-.jcall(jbuilder, "Ldemetra/util/Validatable;", "build")
-  return (.jcast(jval, "demetra/arima/SarimaSpec"))
 }
 
 r2jd_tramo_automdl<-function(ami){
@@ -295,7 +251,7 @@ r2jd_spec_tramo<-function(spec){
 
   jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "transform", r2jd_tramo_transform(spec))
   jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "estimate", r2jd_tramo_estimate(spec$estimate))
-  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "arima", r2jd_tramo_arima(spec$arima))
+  jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "arima", r2jd_arima(spec$arima))
   jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "autoModel", r2jd_tramo_automdl(spec$automdl))
   jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "outliers", r2jd_tramo_outlier(spec$outlier))
   jbuilder<-.jcall(jbuilder, "Ldemetra/tramo/TramoSpec$Builder;", "regression", r2jd_tramo_regression(spec$regression))

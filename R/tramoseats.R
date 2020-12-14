@@ -12,7 +12,7 @@ NULL
 #' @export
 #'
 #' @examples
-tramo<-function(ts, spec, context=NULL){
+tramo_raw<-function(ts, spec, context=NULL){
   # TODO : check parameters
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
@@ -24,6 +24,21 @@ tramo<-function(ts, spec, context=NULL){
     }
     jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramoseats/r/Tramo$Results;", "process", jts, jspec, jcontext )
   }
+  return (jrslt)
+}
+
+#' Title
+#'
+#' @param ts
+#' @param spec
+#' @param context
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tramo<-function(ts, spec, context=NULL){
+  jrslt<-tramo_raw(ts, spec, context)
   if (is.jnull(jrslt)){
     return (NULL)
   }else{
@@ -41,7 +56,7 @@ tramo<-function(ts, spec, context=NULL){
 #' @export
 #'
 #' @examples
-tramoseats<-function(ts, spec, context=NULL){
+tramoseats_raw<-function(ts, spec, context=NULL){
   # TODO : check parameters
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
@@ -53,7 +68,28 @@ tramoseats<-function(ts, spec, context=NULL){
     }
     jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/r/TramoSeats$Results;", "process", jts, jspec, jcontext)
   }
+  return (jrslt)
 }
+
+#' Title
+#'
+#' @param ts
+#' @param spec
+#' @param context
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tramoseats<-function(ts, spec, context=NULL){
+  jrslt<-tramoseats_raw(ts, spec, context)
+  if (is.jnull(jrslt)){
+    return (NULL)
+  }else{
+    return (tramoseats_rslts(jrslt))
+  }
+}
+
 
 terror_names<-c("actual", "forecast", "error", "rel. error", "raw", "fraw", "efraw")
 forecast_names<-c("forecast", "error", "fraw", "efraw")

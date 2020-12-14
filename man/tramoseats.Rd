@@ -7,11 +7,7 @@
 tramoseats(ts, spec, context = NULL)
 }
 \arguments{
-\item{ts}{Time series}
-
-\item{spec}{Specification list}
-
-\item{context}{Optional. context for the processing (user-defined variables and calendars)}
+\item{context}{}
 }
 \value{
 
