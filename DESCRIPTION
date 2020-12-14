@@ -40,4 +40,5 @@ Collate:
     'tramoseats_rslts.R'
     'tramoseats_spec.R'
     'x13.R'
+    'x13_rslts.R'
     'x13_spec.R'
