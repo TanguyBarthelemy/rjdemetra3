@@ -129,10 +129,3 @@ r2jd_spec_x11<-function(spec){
 
 }
 
-stresstest<-function(){
-for (i in 1:1000){
-  spec<-spec_tramo_default("trfull")
-  a<-jd2r_spec_tramo(spec)
-#  nspec<-r2jd_spec_tramo(a)
-}
-}

@@ -31,7 +31,9 @@ matrix_jd2r<-function(s){
   nr<-.jcall(s, "I", "getRowsCount")
   nc<-.jcall(s, "I", "getColumnsCount")
   d<-.jcall(s, "[D", "toArray")
-  return (array(d, dim=c(nr, nc)))
+  m<-array(d, dim=c(nr, nc))
+  m[is.nan(m)]<-NA
+  return (m)
 }
 
 matrix_r2jd<-function(s){

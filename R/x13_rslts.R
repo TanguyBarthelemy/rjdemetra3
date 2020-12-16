@@ -1,6 +1,10 @@
 #' @include utils.R jd3_rslts.R
 NULL
 
+X11_RSLTS<-c("b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10", "b11", "b13", "b17", "b20",
+                 "c1", "c2", "c4", "c5", "c6", "c7", "c9", "c10", "c11", "c13", "c17", "c20",
+                 "d1", "d2", "d4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "d12", "d13")
+
 #' Title
 #'
 #' @param jrslts
@@ -11,11 +15,7 @@ NULL
 #' @examples
 x11_rslts<-function(jrslts){
 
-  d7<-proc_ts(jrslts, "d7")
-  d10<-proc_ts(jrslts, "d10")
-  d11<-proc_ts(jrslts, "d11")
-  d12<-proc_ts(jrslts, "d12")
-  d13<-proc_ts(jrslts, "d13")
-
-  return (list(d7=d7, d10=d10, d11=d11, d12=d12, d13=d13))
+  all<-proc_matrix(jrslts, "all")
+  colnames(all)<-X11_RSLTS
+  return (list(all=all))
 }
