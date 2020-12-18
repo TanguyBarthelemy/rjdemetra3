@@ -80,18 +80,24 @@ jd2r_fastspec_x11<-function(jspec){
 }
 
 stresstest<-function(){
-  for (i in 1:1000){
+  start_time = Sys.time()
+  for (i in 1:2000){
     spec<-spec_x11_default()
     q<-jd2r_spec_x11(spec)
     nspec<-r2jd_spec_x11(q)
   }
+  end_time = Sys.time()
+  print(end_time-start_time)
 }
 
 stresstest2<-function(){
-  for (i in 1:1000){
+  start_time = Sys.time()
+  for (i in 1:2000){
     spec<-spec_x11_default()
     q<-jd2r_fastspec_x11(spec)
     nspec<-r2jd_fastspec_x11(q)
   }
+  end_time = Sys.time()
+  print(end_time-start_time)
 }
 

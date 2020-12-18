@@ -108,13 +108,13 @@ terror<-function(ts, spec, nback=1){
   # TODO : check parameters
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
-    jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/math/matrices/MatrixType;", "terror", jts, spec, as.integer(nback))
+    jrslt<-.jcall("demetra/tramoseats/r/Terror", "Ldemetra/math/matrices/MatrixType;", "process", jts, spec, as.integer(nback))
   }else{
     jspec<-r2jd_spec_tramo(spec)
     if (is.null(context)){
       jcontext<-.jnull("demetra/util/r/Dictionary")
     }
-    jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/math/matrices/MatrixType;", "terror", jts, jspec, jcontext, as.integer(nback))
+    jrslt<-.jcall("demetra/tramoseats/r/Terror", "Ldemetra/math/matrices/MatrixType;", "process", jts, jspec, jcontext, as.integer(nback))
   }
   if (is.jnull(jrslt)){
     return (NULL)
