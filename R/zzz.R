@@ -1,4 +1,4 @@
-#' @import rJava
+#' @import RProtoBuf rJava
 NULL
 
 
@@ -19,4 +19,6 @@ NULL
     cat("Java requirements fullfilled, found version ",jversion,"\n")
   }
 
+  proto.dir <- system.file("proto", package = "RJDemetra3")
+  readProtoFiles2(protoPath = proto.dir)
 }

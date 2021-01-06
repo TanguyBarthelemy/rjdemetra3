@@ -28,5 +28,7 @@ export(x11)
 export(x11_rslts)
 export(x13)
 export(x13_raw)
+import(RProtoBuf)
 import(checkmate)
 import(rJava)
+

@@ -62,7 +62,7 @@ r2jd_fastspec_x11<-function(x){
 #'
 #' @examples
 jd2r_fastspec_x11<-function(jspec){
-  jbuffer<-.jnew("demetra/x13/r/X11Buffer", jspec)
+  jbuffer<-.jcall("demetra/x13/r/X11Buffer","Ldemetra/x13/r/X11Buffer;", "of", jspec)
   rspec<-.jcall(jbuffer, "[D", "data")
   filters<-rspec[FILTER:(FILTER+MAXFREQ-1)]
   n<-match(0, filters)-1
@@ -83,8 +83,10 @@ stresstest<-function(){
   start_time = Sys.time()
   for (i in 1:2000){
     spec<-spec_x11_default()
-    q<-jd2r_spec_x11(spec)
-    nspec<-r2jd_spec_x11(q)
+    q<-.jcall("demetra/x13/io/protobuf/X13ProtosUtility", "[B", "toBuffer", spec)
+    rq<-RProtoBuf::read(x13.X11Spec, q)
+    nq<-RProtoBuf::serialize(rq, NULL)
+    nspec<-.jcall("demetra/x13/io/protobuf/X13ProtosUtility", "Ldemetra/x11/X11Spec;", "x11SpecOf", nq)
   }
   end_time = Sys.time()
   print(end_time-start_time)
