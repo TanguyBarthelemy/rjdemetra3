@@ -1,61 +1,87 @@
 syntax = "proto3";
 import public "toolkit.proto";
 import public "regarima.proto";
+import public "sa.proto";
 
 package x13;
 
 option java_package = "demetra.x13.io.protobuf";
 option java_outer_classname = "X13Protos";
 
+enum DecompositionMode {
+  UNKNOWN = 0;
+  ADDITIVE = 1;
+  MULTIPLICATIVE = 2;
+  LOGADDITIVE = 3;
+  PSEUDOADDITIVE = 4;
+}
+  
+enum SeasonalFilter {
+	SEASONAL_FILTER_UNSPECIFIED = 0;
+    SEASONAL_FILTER_S3X1=1;
+    SEASONAL_FILTER_S3X3=2;
+    SEASONAL_FILTER_S3X5=3;
+    SEASONAL_FILTER_S3X9=4;
+    SEASONAL_FILTER_S3X15=5;
+	SEASONAL_FILTER_MSR=6;
+	SEASONAL_FILTER_STABLE=7;
+    SEASONAL_FILTER_X11DEFAULT=8;
+}
+  
+enum CalendarSigma {
+	SIGMA_UNSPECIFIED = 0;
+    SIGMA_NONE=1;
+    SIGMA_SIGNIF=2; 
+    SIGMA_ALL=3;
+    SIGMA_SELECT=4;
+}
+  
+enum BiasCorrection {
+	BIAS_UNSPECIFIED = 0;
+    BIAS_NONE = 1;
+    BIAS_LEGACY = 2;
+    BIAS_SMOOTH = 3;
+    BIAS_RATIO = 4;	
+}
+
 message X11Spec {
-  enum DecompositionMode {
-    UNKNOWN = 0;
-    ADDITIVE = 1;
-    MULTIPLICATIVE = 2;
-    LOGADDITIVE = 3;
-    PSEUDOADDITIVE = 4;
-  }
-  
-  enum SeasonalFilter {
-    MSR=0;
-    STABLE=1;
-    S3X1=2;
-    S3X3=3;
-    S3X5=4;
-    S3X9=5;
-    S3X15=6;
-    X11DEFAULT=7;
-  }
-  
-  enum CalendarSigma {
-    NONE=0;
-    SIGNIF=1; 
-    ALL=2;
-    SELECT=3;
-  }
-  
-  enum BiasCorrection {
-    NOCORRECTION =0;
-    LEGACY = 1;
-    SMOOTH = 2;
-    RATIO = 3;	
-  }
   
   DecompositionMode mode = 1;
   bool seasonal = 2;
   int32 henderson = 3;
-  repeated SeasonalFilter sfilter=4;
+  repeated SeasonalFilter sfilters=4;
   double lsig = 5;
   double usig = 6;
   int32 nfcasts = 7;
   int32 nbcasts = 8;
   CalendarSigma sigma = 9;
-  repeated int32 vsigma = 10;
+  repeated int32 vsigmas = 10;
   bool excudefcasts = 11;
   BiasCorrection bias = 12;
 }
 
-message Spec {
+enum OutlierMethod{
+	OUTLIER_UNSPECIFIED = 0;
+	OUTLIER_ADDONE = 1;
+	OUTLIER_ADDALL = 2;
+}
+
+enum EasterType {
+	EASTER_UNSPECIFIED = 0;
+	EASTER_UNUSED = 1;
+	EASTER_STANDARD = 2;
+	EASTER_JULIAN = 3;
+	EASTER_SC = 4;
+}
+
+enum RegressionTest {
+    TEST_UNSPECIFIED = 0;
+	TEST_NO = 1;
+	TEST_ADD = 2;
+	TEST_REMOVE = 3;
+}
+		
+message RegArimaSpec {
     
     message BasicSpec{
 		jd3.TimeSelector span = 1;
@@ -64,9 +90,25 @@ message Spec {
     }
 	
     message TransformSpec{
-		
+		regarima.Transformation transformation = 1;
+		regarima.LengthOfPeriod adjust = 2;
+		double aicdiff = 3;
     }
-    
+	
+	message OutlierSpec{
+		message Type{
+			string code = 1;
+			double va = 2;
+		}
+		repeated Type outliers = 1;
+	    jd3.TimeSelector span = 2;
+		double defva = 3;
+		OutlierMethod method = 4;
+		double monthlytcrate = 5;
+		int32 maxiter = 6;
+		int32 lsrun = 7;
+	}
+
     message AutoModelSpec{
         bool enabled = 1;
         double ljungbox = 2;
@@ -83,9 +125,57 @@ message Spec {
         bool balanced = 13;
     }
 
-	BasicSpec basic=1;
-	regarima.SarimaSpec arima=3;
-    AutoModelSpec automodel = 4;
-    X11Spec x11=7;
+	message EasterSpec{
+		bool automatic =1;
+		int32 duration = 2;
+		RegressionTest test = 3;
+		bool julian = 4;
+	}
+
+	message TradingDaysSpec{
+		regarima.TradingDays td = 1;
+		regarima.LengthOfPeriod lp = 2;
+		string holidays = 3;
+		repeated string users = 4;
+		int32 w = 5;
+		RegressionTest test = 6;
+		bool auto_adjust=7;;
+	}
+
+	message RegressionSpec{
+		message PrespecifiedVariable{
+			string name = 1;
+			repeated jd3.Parameter parameters = 2;
+		}
+		
+		bool mean = 1;
+		TradingDaysSpec td = 2;
+		EasterSpec easter = 3;
+		repeated regarima.Outlier outliers = 4;
+		repeated regarima.Variable users = 5;
+		repeated regarima.InterventionVariable interventions=6;
+		repeated regarima.Ramp ramps = 7;
+		repeated PrespecifiedVariable preadujstments = 8;
+	}
+
+	message EstimateSpec{
+	    jd3.TimeSelector span = 1;
+		double tol = 2;
+	}
+
+	BasicSpec basic = 1;
+	TransformSpec transform = 2;
+	OutlierSpec outlier = 3;
+	regarima.SarimaSpec arima = 4;
+    AutoModelSpec automodel = 5;
+	RegressionSpec regression = 6;
+	EstimateSpec estimate = 7;
 }
+
+message Spec{
+	RegArimaSpec regarima = 1;
+	X11Spec x11 = 2;
+	sa.BenchmarkingSpec benchmarking = 3;
+}
+
 

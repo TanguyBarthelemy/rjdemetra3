@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package sa;
+
+option java_package = "demetra.sa.io.protobuf";
+option java_outer_classname = "SaProtos";
+
+enum BenchmarkingTarget {
+	BENCH_TARGET_UNSPECIFIED = 0;
+	BENCH_TARGET_ORIGINAL = 1;
+	BENCH_TARGET_CALENDARADJUSTED = 2;
+}
+
+enum BenchmarkingBias {
+	BENCH_BIAS_UNSPECIFIED = 0;
+    BENCH_BIAS_NONE = 1;
+	BENCH_BIAS_ADDITIVE = 2;
+	BENCH_BIAS_MULTIPLICATIVE = 3;
+}
+
+message BenchmarkingSpec{
+	bool enabled = 1;
+	BenchmarkingTarget target = 2;
+	double lambda = 3;
+	double rho = 4;
+	BenchmarkingBias bias = 5;
+	bool forecast = 6;
+}
