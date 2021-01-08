@@ -18,7 +18,7 @@ enum SelectionType {
 
 
 message TimeSelector{
-	SelectionType Type = 1;
+	SelectionType type = 1;
 	int32 n0 = 2;
 	int32 n1 = 3;
 	string d0 = 4;
@@ -37,3 +37,40 @@ message Parameter{
 	ParameterType type = 2;
 }
 
+message TsData{
+	string name = 1;
+	int32 period = 2;
+	int32 start_year = 3;
+	int32 start_period = 4;
+	repeated double value = 5;
+}
+
+message Matrix{
+	string name = 1;
+	int32 nrows = 2;
+	int32 ncols = 3;
+	repeated double value = 4;
+}
+
+message StatisticalTest{
+	double value = 1;
+	double pvalue = 2;
+	string description = 3;
+}
+
+message LikelihoodStatistics{
+	int32 nobs = 1;
+	int32 neffectiveobs = 2;
+	int32 nparams = 3;
+	int32 degrees_of_freedom = 4;
+	double log_likelihood = 5;
+	double adjusted_log_likelihood = 6;
+	double aic = 7;
+	double aicc = 8;
+	double bic = 9;
+	double bicc = 10;
+	double bic2 = 11;
+	double hannan_quinn = 12;
+	double ssq = 13;
+	
+}

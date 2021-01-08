@@ -12,7 +12,7 @@ NULL
 #' @export
 #'
 #' @examples
-tramo_raw<-function(ts, spec, context=NULL){
+tramo<-function(ts, spec, context=NULL){
   # TODO : check parameters
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
@@ -21,54 +21,16 @@ tramo_raw<-function(ts, spec, context=NULL){
     jspec<-r2jd_spec_tramo(spec)
     if (is.null(context)){
       jcontext<-.jnull("demetra/util/r/Dictionary")
+    }else{
+      # TODO
     }
     jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramoseats/r/Tramo$Results;", "process", jts, jspec, jcontext )
   }
-  return (jrslt)
-}
-
-#' Title
-#'
-#' @param ts
-#' @param spec
-#' @param context
-#'
-#' @return
-#' @export
-#'
-#' @examples
-tramo<-function(ts, spec, context=NULL){
-  jrslt<-tramo_raw(ts, spec, context)
   if (is.jnull(jrslt)){
     return (NULL)
   }else{
     return (regarima_rslts(jrslt))
   }
-}
-
-#' Title
-#'
-#' @param ts Time series
-#' @param spec Specification list
-#' @param context Optional. context for the processing (user-defined variables and calendars)
-#'
-#' @return
-#' @export
-#'
-#' @examples
-tramoseats_raw<-function(ts, spec, context=NULL){
-  # TODO : check parameters
-  jts<-ts_r2jd(ts)
-  if (is.character(spec)){
-    jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/r/TramoSeats$Results;", "process", jts, spec)
-  }else{
-    jspec<-r2jd_spec_tramoseats(spec)
-    if (is.null(context)){
-      jcontext<-.jnull("demetra/util/r/Dictionary")
-    }
-    jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/r/TramoSeats$Results;", "process", jts, jspec, jcontext)
-  }
-  return (jrslt)
 }
 
 #' Title
@@ -82,7 +44,16 @@ tramoseats_raw<-function(ts, spec, context=NULL){
 #'
 #' @examples
 tramoseats<-function(ts, spec, context=NULL){
-  jrslt<-tramoseats_raw(ts, spec, context)
+  jts<-ts_r2jd(ts)
+  if (is.character(spec)){
+    jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/r/TramoSeats$Results;", "process", jts, spec)
+  }else{
+    jspec<-r2jd_spec_tramoseats(spec)
+    if (is.null(context)){
+      jcontext<-.jnull("demetra/util/r/Dictionary")
+    }
+    jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/r/TramoSeats$Results;", "process", jts, jspec, jcontext)
+  }
   if (is.jnull(jrslt)){
     return (NULL)
   }else{

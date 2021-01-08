@@ -39,8 +39,8 @@ message SarimaSpec{
 
 message Variable{
     string name = 1;
-    int32 firstLag = 2;
-	int32 lastLag = 3;
+    int32 first_lag = 2;
+	int32 last_lag = 3;
     repeated string attributes = 4;
 }
 

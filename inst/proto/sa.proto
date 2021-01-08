@@ -5,6 +5,17 @@ package sa;
 option java_package = "demetra.sa.io.protobuf";
 option java_outer_classname = "SaProtos";
 
+enum ComponentType{
+    Undefined=0;
+	Series=1;
+    Trend=2;
+    Seasonal=3;
+    SeasonallyAdjusted=4;
+    Irregular=5;
+    CalendarEffect=6;
+}
+
+
 enum BenchmarkingTarget {
 	BENCH_TARGET_UNSPECIFIED = 0;
 	BENCH_TARGET_ORIGINAL = 1;

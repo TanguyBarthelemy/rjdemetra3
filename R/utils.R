@@ -86,30 +86,6 @@ r2jd_span <- function(span){
 }
 
 
-#' Title
-#'
-#' @param span
-#'
-#' @return
-#' @export
-#'
-#' @examples
-print.JD3SPAN<-function(span){
-  type<-span$type
-  d0<-span$d0
-  d1<-span$d1
-  n0<-span$n0
-  n1<-span$n1
-
-  x <- if (type=="All") {"All"} else if (type=="From") {paste("From",d0, sep=" ")}
-  else if (type=="To") {paste("Until",d1, sep=" ")}
-  else if (type=="Between") {paste(d0,d1,sep=" - ")}
-  else if (type=="First") {paste("All but first",n0,"periods", sep=" ")}
-  else if (type=="Last") {paste("All but last",n1,"periods", sep=" ")}
-  else if (type=="Excluding") {paste("All but first",n0,"periods and last",n1,"periods", sep=" ")}
-
-  print(x)
-}
 
 jd2r_parameters <- function(jparams){
   if (is.jnull(jparams))
@@ -210,5 +186,64 @@ jd2r_enumlist<-function(jrslt){
     v[i]=.jcall(.jcall(jiter, "Ljava/lang/Object;", "next"), "Ljava/lang/String;", "toString")
   }
   return (v)
+}
+
+#### PROTOBUF FUNCTIONS
+
+enum_extract<-function(type, p){
+  name<-type$value(number=p)$name()
+  return (substring(name, regexpr("_", name)+1))
+}
+
+enum_of<-function(type, code, prefix){
+  i<-type$value(name=paste(prefix, code, sep='_'))$number()
+}
+
+
+p2r_span<-function(span){
+
+  type<-enum_extract(jd3.SelectionType, span$type)
+  d<-span$d0
+  if (nchar(d)>0)  dt0<-as.Date(d) else dt0=NULL
+  d<-span$d1
+  if (nchar(d)>0)  dt1<-as.Date(d) else dt1=NULL
+
+  return (structure(list(type=type, d0=dt0, d1=dt1, n0=span$n0, n1=span$n1), class= "JD3SPAN"))
+}
+
+r2p_span<-function(rspan, pspan){
+  pspan$type<-enum_of(jd3.SelectionType, rspan$type, "SPAN")
+  pspan$n0<-rspan$n0
+  pspan$n1<-rspan$n1
+  pspan$d0<-as.character(rspan$d0)
+  pspan$d1<-as.character(rspan$d1)
+}
+
+
+#' Title
+#'
+#' @param span
+#'
+#' @return
+#' @export
+#'
+#' @examples
+print.JD3SPAN<-function(span){
+  type<-span$type
+  d0<-span$d0
+  d1<-span$d1
+  n0<-span$n0
+  n1<-span$n1
+
+  if (type=="ALL") {x<-"All"}
+  else if (type=="FROM") {x<-paste("From",d0, sep=" ")}
+  else if (type=="To") {x<-paste("Until",d1, sep=" ")}
+  else if (type=="BETWEEN") {x<-paste(d0,d1,sep=" - ")}
+  else if (type=="FIRST") {x<-paste("All but first",n0,"periods", sep=" ")}
+  else if (type=="LAST") {x<-paste("All but last",n1,"periods", sep=" ")}
+  else if (type=="EXCLUDING") {x<-paste("All but first",n0,"periods and last",n1,"periods", sep=" ")}
+  else {x<- "Undefined"}
+
+  print(x)
 }
 

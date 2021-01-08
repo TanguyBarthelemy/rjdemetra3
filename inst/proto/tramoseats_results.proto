@@ -1,0 +1,9 @@
+syntax = "proto3";
+import public "toolkit.proto";
+import public "regarima.proto";
+import public "sa.proto";
+
+package tramoseats;
+
+option java_package = "demetra.tramoseats.io.protobuf";
+option java_outer_classname = "TramoSeatsResultsProtos";

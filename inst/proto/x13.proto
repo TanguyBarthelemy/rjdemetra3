@@ -56,7 +56,7 @@ message X11Spec {
   int32 nbcasts = 8;
   CalendarSigma sigma = 9;
   repeated int32 vsigmas = 10;
-  bool excudefcasts = 11;
+  bool exclude_fcasts = 11;
   BiasCorrection bias = 12;
 }
 
@@ -104,7 +104,7 @@ message RegArimaSpec {
 	    jd3.TimeSelector span = 2;
 		double defva = 3;
 		OutlierMethod method = 4;
-		double monthlytcrate = 5;
+		double monthly_tc_rate = 5;
 		int32 maxiter = 6;
 		int32 lsrun = 7;
 	}
@@ -126,10 +126,9 @@ message RegArimaSpec {
     }
 
 	message EasterSpec{
-		bool automatic =1;
+		EasterType type = 1;
 		int32 duration = 2;
 		RegressionTest test = 3;
-		bool julian = 4;
 	}
 
 	message TradingDaysSpec{

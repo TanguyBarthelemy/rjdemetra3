@@ -23,13 +23,13 @@ enum SeatsAlgorithm{
 
 message DecompositionSpec {
 	
-	double xlBoundary = 1;
+	double xl_boundary = 1;
     SeatsApproximation approximation = 2;
     double seastolerance = 3;
-    double trendboundary = 4;
-	double seasBoundary = 5;
-    double seasBoundaryAtPi = 6;
-	bool biascorrection = 7;
+    double trend_boundary = 4;
+	double seas_boundary = 5;
+    double seas_boundary_at_pi = 6;
+	bool bias_correction = 7;
     int32 nfcasts = 8;
 	int32 nbcasts = 9;
     SeatsAlgorithm algorithm = 10;
@@ -78,6 +78,7 @@ message TramoSpec {
 		bool so = 6;
 		double va = 7;
 		double tcrate = 8;
+		bool ml = 9;
 	}
 
     message AutoModelSpec{
@@ -88,8 +89,8 @@ message TramoSpec {
         double pcr = 5;
         double pc = 6;
         double tsig = 7;
-        bool acceptdef = 8;
-        bool amicompare = 9;
+        bool accept_def = 8;
+        bool ami_compare = 9;
     }
 	
 	message EasterSpec{
