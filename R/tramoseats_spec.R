@@ -119,31 +119,46 @@ p2r_spec_tramo<-function(pspec){
 }
 
 
-r2p_spec_tramo<-function(rspec, pspec){
+r2p_spec_tramo<-function(rspec){
+  pspec<-tramoseats.TramoSpec$new()
   # BIAS
   pspec$basic$preliminary_check<-rspec$basic$preliminaryCheck
-  pspan<-jd3.TimeSelector$new()
-  r2p_span(rspec$basic$span, pspan)
-  pspec$basic$span<-pspan
+  pspec$basic$span<-r2p_span(rspec$basic$span)
 
   # TRANSFORM
-  pt<-pspec$transform
-  rt<-rspec$transform
-  pt$transformation<-enum_of(regarima.Transformation, rt$fn, "FN")
-  pt$fct<-rt$fct
+  pspec$transform$transformation<-enum_of(regarima.Transformation, rspec$transform$fn, "FN")
+  pspec$transform$fct<-rspec$transform$fct
 
   #OUTLIER
-  po<-pspec$outlier
-  ro<-rspec$outlier
-  r2p_span(ro$span, po$span)
-  po$enabled<-ro$enabled
-  po$ao<-ro$ao
-  po$ls<-ro$ls
-  po$tc<-ro$tc
-  po$so<-ro$s
-  po$va<-ro$va
-  po$tcrate=ro$tcrate
-  po$ml<-ro$ml
+
+  pspec$outlier$span<-r2p_span(rspec$outlier$span)
+  pspec$outlier$enabled<-rspec$outlier$enabled
+  pspec$outlier$ao<-rspec$outlier$ao
+  pspec$outlier$ls<-rspec$outlier$ls
+  pspec$outlier$tc<-rspec$outlier$tc
+  pspec$outlier$so<-rspec$outlier$s
+  pspec$outlier$va<-rspec$outlier$va
+  pspec$outlier$tcrate=rspec$outlier$tcrate
+  pspec$outlier$ml<-rspec$outlier$ml
+
+  #REGRESSION
+
+  #TD
+  pspec$regression$td$td<-enum_of(regarima.TradingDays, rspec$regression$td$td, "TD")
+  pspec$regression$td$lp<-enum_of(regarima.LengthOfPeriod, rspec$regression$td$lp, "LP")
+  pspec$regression$td$holidays<-rspec$regression$td$holidays
+  pspec$regression$td$users<-rspec$regression$td$users
+  pspec$regression$td$test <-enum_of(tramoseats.TradingDaysTest, rspec$regression$td$test, "TD")
+  pspec$regression$td$auto <-enum_of(tramoseats.AutomaticTradingDays, rspec$regression$td$auto, "TD")
+  pspec$regression$td$w<-rspec$regression$td$w
+  pspec$regression$td$ptest<-rspec$regression$td$ptest
+
+  #ESTIMATE
+  pspec$estimate$span<-r2p_span(rspec$estimate$span)
+  pspec$estimate$tol<-rspec$estimate$tol
+  pspec$estimate$ubp<-rspec$estimate$ubp
+
+  return (pspec)
 }
 
 

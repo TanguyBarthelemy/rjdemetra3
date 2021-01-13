@@ -211,12 +211,15 @@ p2r_span<-function(span){
   return (structure(list(type=type, d0=dt0, d1=dt1, n0=span$n0, n1=span$n1), class= "JD3SPAN"))
 }
 
-r2p_span<-function(rspan, pspan){
+r2p_span<-function(rspan){
+  pspan<-jd3.TimeSelector$new()
   pspan$type<-enum_of(jd3.SelectionType, rspan$type, "SPAN")
   pspan$n0<-rspan$n0
   pspan$n1<-rspan$n1
   pspan$d0<-as.character(rspan$d0)
   pspan$d1<-as.character(rspan$d1)
+
+  return (pspan)
 }
 
 
