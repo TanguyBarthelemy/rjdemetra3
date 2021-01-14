@@ -8,7 +8,8 @@ jd2r_spec_tramo<-function(spec, context_dictionary = NULL){
 }
 
 r2jd_spec_tramo<-function(spec){
-  nq<-RProtoBuf::serialize(spec, NULL)
+  pspec<-r2p_spec_tramo(spec)
+  nq<-RProtoBuf::serialize(pspec, NULL)
   nspec<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramo/TramoSpec;", "of", nq)
   return (nspec)
 }
@@ -81,12 +82,6 @@ raw_spec_tramoseats_default<-function(name){
   q<-.jcall("demetra/tramoseats/r/TramoSeats", "[B", "toBuffer", spec)
   rq<-RProtoBuf::read(tramoseats.Spec, q)
   return (rq)
-}
-
-p2r_parameters<-function(p){
-  value<-sapply(p, function(z){z$value})
-  type<-sapply(p, function(z){z$type})
-  return (cbind(value, type))
 }
 
 

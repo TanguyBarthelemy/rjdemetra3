@@ -25,7 +25,7 @@ message X11Results{
     jd3.TsData d12=12;
     jd3.TsData d13=13;
 	
-	repeated SeasonalFilter final_seasonal_filter = 14;
+	repeated SeasonalFilter final_seasonal_filters = 14;
 	int32 final_henderson_filter = 15;
 	double icratio =16;
 	

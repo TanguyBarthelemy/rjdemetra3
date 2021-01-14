@@ -130,7 +130,6 @@ r2jd_spec_benchmarking<-function(spec){
   return (.jcast(jval, "demetra/sa/benchmarking/SaBenchmarkingSpec"))
 }
 
-
 jd2r_spec_arima<-function(spec){
   jarima<-.jcall(spec, "Ldemetra/arima/SarimaSpec;", "getArima")
   p <-.jcall(jarima, "I", "getP")
@@ -190,6 +189,7 @@ jd2r_enumlist<-function(jrslt){
 
 #### PROTOBUF FUNCTIONS
 
+
 enum_extract<-function(type, p){
   name<-type$value(number=p)$name()
   return (substring(name, regexpr("_", name)+1))
@@ -199,6 +199,39 @@ enum_of<-function(type, code, prefix){
   i<-type$value(name=paste(prefix, code, sep='_'))$number()
 }
 
+p2r_likelihood<-function(p){
+  return (list(nobs=p$nobs, neffectiveobs=p$neffectiveobs, nparams=p$nparams,
+               ll=p$log_likelihood, adjll=p$adjusted_log_likelihood,
+               aic=p$aic, aicc=p$aicc, bic=p$bic, bicc=p$bicc, ssq=p$ssq))
+}
+
+p2r_matrix<-function(p){
+  m<-matrix(data=p$values, nrow = p$nrows, ncol = p$ncols)
+  `attr<-`(m, "name", p$name)
+  return (m)
+}
+
+p2r_ts<-function(p){
+  s<-ts(data=p$values, frequency = p$period, start = c(p$start_year, p$start_period))
+  `attr<-`(s, "name", p$name)
+  return (s)
+}
+
+
+p2r_parameters<-function(p){
+  if (is.null(p))
+    return (NULL)
+  if (length(p) == 0)
+    return (NULL)
+  value<-sapply(p, function(z){z$value})
+  type<-sapply(p, function(z){enum_extract(jd3.ParameterType, z$type)})
+  return (data.frame(value=value, type=type))
+}
+
+p2r_sarima<-function(p){
+  return (structure(list(period=p$period, p = p$p, d=p$d, q=p$q, bp = p$bp, bd = p$bd, bq = p$bq,
+               parameters=p$parameters, covariance=p2r_matrix(p$covariance)), class= "JD3SARIMA"))
+}
 
 p2r_span<-function(span){
 

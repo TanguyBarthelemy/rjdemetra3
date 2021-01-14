@@ -19,6 +19,6 @@ NULL
     cat("Java requirements fullfilled, found version ",jversion,"\n")
   }
 
-  proto.dir <- system.file("proto", package = "RJDemetra3")
+  proto.dir <- system.file("proto", package = pkgname)
   readProtoFiles2(protoPath = proto.dir)
 }

@@ -23,6 +23,7 @@ tramo<-function(ts, spec, context=NULL){
       jcontext<-.jnull("demetra/util/r/Dictionary")
     }else{
       # TODO
+      jcontext<-.jnull("demetra/util/r/Dictionary")
     }
     jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramoseats/r/Tramo$Results;", "process", jts, jspec, jcontext )
   }
@@ -106,7 +107,7 @@ terror<-function(ts, spec, nback=1){
 #' @export
 #'
 #' @examples
-forecast<-function(ts, spec, nf=-1){
+forecast<-function(ts, spec="trfull", nf=-1){
   # TODO : check parameters
   jts<-ts_r2jd(ts)
   if (nf<0) nf<-frequency(ts)*(-nf)

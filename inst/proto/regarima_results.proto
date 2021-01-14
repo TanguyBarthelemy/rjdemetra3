@@ -8,13 +8,15 @@ option java_outer_classname = "RegArimaResultsProtos";
 
 message Sarima{
 	int32 period=1;
-	repeated jd3.Parameter phi = 2;
+	int32 p = 2;
 	int32 d = 3;
-	repeated jd3.Parameter theta = 4;
-	repeated jd3.Parameter bphi = 5;
+	int32 q = 4;
+	int32 bp = 5;
 	int32 bd = 6;
-	repeated jd3.Parameter btheta = 7;
-	jd3.Matrix covariance = 8;
+	int32 bq = 7;
+	/* phi, bphi, theta, btheta; true signs*/	
+	repeated double parameters = 8;
+	jd3.Matrix covariance = 9;
 }
 
 enum VariableType{
@@ -34,28 +36,37 @@ enum VariableType{
 
 message RegressionVariable{
 	string name = 1;
-	VariableType type = 2;
-	double coefficient = 3; 
-	repeated string attribute = 4;
+	VariableType var_type = 2;
+	repeated string metadata = 3;
+	double coefficient = 4; 
+	double stde = 5;
+	double pvalue = 6;
 }
 
 message OutlierEstimation{
 	string code = 1;
 	int32 position = 2;
-	string date = 3;
-	bool prespecified = 4;
-	double coefficient = 6;
-	double tstat = 7;
+	bool prespecified = 3;
+	double coefficient = 10;
+	double stde = 11;
 }
+
+message MissingEstimation{
+	int32 position = 1;
+	double value = 10;
+	double stde = 11;
+}
+
 
 message RegArimaEstimation{
 
 	Transformation transformation = 1;
 	LengthOfPeriod preadjustment = 2;
 	jd3.LikelihoodStatistics likelihood = 4;
-	Sarima sarima = 6;
-	repeated RegressionVariable variable = 7;
+	Sarima sarima = 5;
+	repeated RegressionVariable variables = 6;
+	repeated double coefficients = 7;
 	jd3.Matrix covariance = 8;
-	
+	repeated MissingEstimation missings= 10;
 	
 }
