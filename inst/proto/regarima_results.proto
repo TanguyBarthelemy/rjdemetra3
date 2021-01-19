@@ -37,7 +37,7 @@ enum VariableType{
 message RegressionVariable{
 	string name = 1;
 	VariableType var_type = 2;
-	repeated string metadata = 3;
+	map<string, string> metadata = 3;
 	double coefficient = 4; 
 	double stde = 5;
 	double pvalue = 6;

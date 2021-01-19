@@ -1,4 +1,5 @@
 syntax = "proto3";
+import public "toolkit.proto";
 
 package sa;
 
@@ -6,13 +7,37 @@ option java_package = "demetra.sa.io.protobuf";
 option java_outer_classname = "SaProtos";
 
 enum ComponentType{
-    Undefined=0;
-	Series=1;
-    Trend=2;
-    Seasonal=3;
-    SeasonallyAdjusted=4;
-    Irregular=5;
-    CalendarEffect=6;
+    UNDEFINED=0;
+	SERIES=1;
+    TREND=2;
+    SEASONAL=3;
+    SEASONALLYADJUSTED=4;
+    IRREGULAR=5;
+    CALENDAR=6;
+}
+
+enum DecompositionMode {
+  UNKNOWN = 0;	
+  /* Y = T + S + I) */
+  ADDITIVE = 1;
+  /* Y = T * S * I) */
+  MULTIPLICATIVE = 2;
+  /* Y = T * (S + I - 1) */
+  PSEUDOADDITIVE = 3;
+}
+
+
+message Component{
+	ComponentType type = 1;
+	jd3.TsData data = 2;
+	jd3.TsData stde = 3;
+	int32 nbcasts = 6; 
+	int32 nfcasts = 7;
+}
+
+message SaDecomposition{
+	DecompositionMode mode = 1;
+	repeated Component components = 2;
 }
 
 
