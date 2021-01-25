@@ -3,6 +3,7 @@ import public "toolkit.proto";
 import public "regarima.proto";
 import public "sa.proto";
 import public "x13.proto";
+import public "regarima_results.proto";
 
 package x13;
 
@@ -55,5 +56,28 @@ message X11Results{
     jd3.TsData c13=49;
     jd3.TsData c17=50;
     jd3.TsData c20=51;
- 	
+ }
+ 
+ message MStatistics{
+	double m1 = 1;
+	double m2 = 2;
+	double m3 = 3;
+	double m4 = 4;
+	double m5 = 5;
+	double m6 = 6;
+	double m7 = 7;
+	double m8 = 8;
+	double m9 = 9;
+	double m10 = 10;
+	double m11 = 11;
+	double q = 12;
+	double qm2 = 13; 
+ }
+ 
+ message X13Results{
+	regarima.RegArimaEstimation preprocessing = 1;
+	X11Results decomposition = 2;
+    sa.SaDecomposition final = 3;
+	MStatistics mstatistics = 10;
+
 }

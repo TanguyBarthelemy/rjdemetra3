@@ -212,6 +212,8 @@ p2r_matrix<-function(p){
 }
 
 p2r_ts<-function(p){
+  if (length(p$values) == 0)
+    return (NULL)
   s<-ts(data=p$values, frequency = p$period, start = c(p$start_year, p$start_period))
   `attr<-`(s, "name", p$name)
   return (s)
@@ -233,6 +235,11 @@ p2r_sarima<-function(p){
                parameters=p$parameters, covariance=p2r_matrix(p$covariance)), class= "JD3SARIMA"))
 }
 
+p2r_arima<-function(p){
+  return (structure(list(name=p$name, innovationvariance=p$innovation_variance, ar=p$ar, delta=p$delta, ma=p$ma), class= "JD3ARIMA"))
+}
+
+
 p2r_span<-function(span){
 
   type<-enum_extract(jd3.SelectionType, span$type)
@@ -253,6 +260,24 @@ r2p_span<-function(rspan){
   pspan$d1<-as.character(rspan$d1)
 
   return (pspan)
+}
+
+p2r_sacomponent<-function(p){
+  return (list(type=enum_extract(sa.ComponentType, p$type), data=p2r_ts(p$data), stde=p2r_ts(p$stde), nbcasts=p$nbcasts, nfcasts=p$nfcasts))
+}
+
+p2r_sa_decomposition<-function(p){
+  return (list(mode = enum_extract(sa.DecompositionMode, p$mode),
+               components=lapply(p$components, function(z){p2r_sacomponent(z)})))
+}
+
+p2r_ucarima<-function(p){
+
+  return (list(
+    model=p2r_arima(p$model),
+    components=lapply(p$components, function(z){p2r_arima(z)}))
+  )
+
 }
 
 
