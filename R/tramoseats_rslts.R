@@ -24,11 +24,9 @@ p2r_tramoseats_rslts<-function(p){
 p2r_seats_rslts<-function(p){
   return (structure(
     list(
-      initialmodel=p2r_arima(p$initial_model),
-      finalmodel=p2r_arima(p$final_model),
+      seatsmodel=p2r_arima(p$seats_model),
       canonicaldecomposition=p2r_ucarima(p$canonical_decomposition),
-      stochastics=p2r_sa_decomposition(p$stochastic_series),
-      components=p2r_sa_decomposition(p$components)),
+      stochastics=lapply(p$stochastic_series, function(z){p2r_sacomponent(z)})),
     class= "JD3SEATS"))
 
 }

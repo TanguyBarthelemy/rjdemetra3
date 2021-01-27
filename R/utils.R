@@ -273,12 +273,44 @@ p2r_sa_decomposition<-function(p){
 
 p2r_ucarima<-function(p){
 
-  return (list(
+  return (structure
+          (list(
     model=p2r_arima(p$model),
-    components=lapply(p$components, function(z){p2r_arima(z)}))
-  )
-
+    components=lapply(p$components, function(z){p2r_arima(z)})),
+    class= "JD3UCARIMA"))
 }
+
+#' Title
+#'
+#' @param m
+#'
+#' @return
+#' @export
+#'
+#' @examples
+print.JD3ARIMA<-function(m){
+  cat(m$name, "\n\n")
+  cat("AR: ", m$ar, "\n")
+  cat("DIF: ", m$delta, "\n")
+  cat("MA: ", m$ma, "\n")
+  cat("var: ", m$innovationvariance, "\n\n")
+}
+
+
+#' Title
+#'
+#' @param ucm
+#'
+#' @return
+#' @export
+#'
+#' @examples
+print.JD3UCARIMA<-function(ucm){
+print(ucm$model)
+lapply(ucm$components, function(z){print(z)})
+}
+
+
 
 
 #' Title

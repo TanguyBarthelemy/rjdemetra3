@@ -4,7 +4,7 @@
 \alias{forecast}
 \title{Title}
 \usage{
-forecast(ts, spec, nf = -1)
+forecast(ts, spec = "trfull", nf = -1)
 }
 \arguments{
 \item{nf}{}
