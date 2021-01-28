@@ -262,6 +262,28 @@ r2p_span<-function(rspan){
   return (pspan)
 }
 
+p2r_spec_benchmarking<-function(p){
+  return (list(
+    enabled=p$enabled,
+    target=enum_extract(sa.BenchmarkingTarget, p$target),
+    lambda=p$lambda,
+    rho=p$rho,
+    bias=enum_extract(sa.BenchmarkingBias, p$bias),
+    forecast=p$forecast
+  ))
+}
+
+r2p_spec_benchmarking<-function(r){
+  p<-sa.BenchmarkingSpec$new()
+  p$enabled<-r$enabled
+  p$target<-enum_of(sa.BenchmarkingTarget, r$target, "BENCH_TARGET")
+  p$lambda<-r$lambda
+  p$rho<-r$rho
+  p$bias<-enum_of(sa.BenchmarkingBias, r$bias, "BENCH_BIAS")
+  p$forecast<-r$forecast
+  return (p)
+}
+
 p2r_sacomponent<-function(p){
   return (list(type=enum_extract(sa.ComponentType, p$type), data=p2r_ts(p$data), stde=p2r_ts(p$stde), nbcasts=p$nbcasts, nfcasts=p$nfcasts))
 }

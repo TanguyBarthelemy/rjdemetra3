@@ -14,7 +14,7 @@ enum SeatsApproximation {
 	SEATS_APP_LEGACY=2;
 	SEATS_APP_NOISY=3;
 }
-	
+
 enum SeatsAlgorithm{
 	SEATS_ALG_UNSPECIFIED = 0;
 	SEATS_ALG_BURMAN = 1;
@@ -22,17 +22,17 @@ enum SeatsAlgorithm{
 }
 
 message DecompositionSpec {
-	
+
 	double xl_boundary = 1;
-    SeatsApproximation approximation = 2;
-    double seastolerance = 3;
-    double trend_boundary = 4;
+  SeatsApproximation approximation = 2;
+  double seastolerance = 3;
+  double trend_boundary = 4;
 	double seas_boundary = 5;
-    double seas_boundary_at_pi = 6;
+  double seas_boundary_at_pi = 6;
 	bool bias_correction = 7;
-    int32 nfcasts = 8;
+  int32 nfcasts = 8;
 	int32 nbcasts = 9;
-    SeatsAlgorithm algorithm = 10;
+  SeatsAlgorithm algorithm = 10;
 }
 
 enum AutomaticTradingDays {
@@ -41,7 +41,7 @@ enum AutomaticTradingDays {
 	TD_AUTO_FTEST = 2;
 	TD_AUTO_WALDTEST = 3;
 }
-		
+
 enum TradingDaysTest {
 	TD_TEST_UNSPECIFIED = 0;
 	TD_TEST_NO = 1;
@@ -58,17 +58,17 @@ enum EasterType {
 }
 
 message TramoSpec {
-    
+
     message BasicSpec{
 	  jd3.TimeSelector span = 1;
 	  bool preliminary_check = 3;
     }
-    
+
     message TransformSpec{
 	  regarima.Transformation transformation = 1;
 	  double fct = 2;
     }
-	
+
 	message OutlierSpec{
 		bool enabled = 1;
 	    jd3.TimeSelector span = 2;
@@ -92,17 +92,17 @@ message TramoSpec {
         bool accept_def = 8;
         bool ami_compare = 9;
     }
-	
+
 	message EasterSpec{
-		
+
 		EasterType type = 1;
 		int32 duration = 2;
 		bool julian = 3;
 		bool test = 4;
 	}
-	
+
 	message TradingDaysSpec{
-	
+
 		regarima.TradingDays td = 1;
 		regarima.LengthOfPeriod lp = 2;
 		string holidays = 3;
@@ -111,15 +111,15 @@ message TramoSpec {
 		TradingDaysTest test = 6;
 		AutomaticTradingDays auto = 7;
 		double ptest = 8;
-		
+
 	}
-	
+
 	message RegressionSpec{
 		message PrespecifiedVariable{
 			string name = 1;
 			repeated jd3.Parameter parameters = 2;
 		}
-		
+
 		bool mean = 1;
 		TradingDaysSpec td = 2;
 		EasterSpec easter = 3;
@@ -136,7 +136,7 @@ message TramoSpec {
 		double tol = 3;
 		double ubp = 4;
 	}
- 
+
 	BasicSpec basic = 1;
 	TransformSpec transform = 2;
 	OutlierSpec outlier = 3;

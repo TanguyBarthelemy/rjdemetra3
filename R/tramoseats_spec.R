@@ -22,6 +22,7 @@ jd2r_spec_tramoseats<-function(spec){
 }
 
 r2jd_spec_tramoseats<-function(spec){
+  pspec<-r2p_spec_tramoseats(spec)
   nq<-RProtoBuf::serialize(spec, NULL)
   nspec<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/TramoSeatsSpec;", "of", nq)
   return (nspec)
@@ -91,7 +92,7 @@ p2r_spec_tramo<-function(pspec){
   t<-pspec$transform
   transform=list(fn=enum_extract(regarima.Transformation, t$transformation), fct=t$fct)
   a<-pspec$automodel
-  automodel=list(enabled=a$enabled, cancel=a$cancel, ub1=a$ub1, ub2=a$ub2, pcr=a$pcr, pc=a$pc, tsig=a$tsig, amicompare=a$ami_compare)
+  automodel=list(enabled=a$enabled, acceptdef<-a$accept_def, cancel=a$cancel, ub1=a$ub1, ub2=a$ub2, pcr=a$pcr, pc=a$pc, tsig=a$tsig, amicompare=a$ami_compare)
   m<-pspec$arima
   arima=list(d=m$d, bd=m$bd,
              phi=p2r_parameters(m$phi), theta=p2r_parameters(m$theta),
@@ -136,6 +137,18 @@ r2p_spec_tramo<-function(rspec){
   pspec$outlier$tcrate=rspec$outlier$tcrate
   pspec$outlier$ml<-rspec$outlier$ml
 
+  #AMI
+
+  pspec$automodel$enabled<-rspec$automodel$enabled
+  pspec$automodel$cancel<-rspec$automodel$cancel
+  pspec$automodel$ub1<-rspec$automodel$ub1
+  pspec$automodel$ub2<-rspec$automodel$ub2
+  pspec$automodel$pcr<-rspec$automodel$pcr
+  pspec$automodel$pc<-rspec$automodel$pc
+  pspec$automodel$tsig<-rspec$automodel$tsig
+  pspec$automodel$accept_def<-rspec$automodel$acceptdef
+  pspec$automodel$ami_compare<-rspec$automodel$amicompare
+
   #REGRESSION
 
   #TD
@@ -156,7 +169,48 @@ r2p_spec_tramo<-function(rspec){
   return (pspec)
 }
 
+p2r_spec_seats<-function(spec){
+  return (list(
+    xl=spec$xl_boundary,
+    approximation=enum_extract(tramoseats.SeatsApproximation, spec$approximation),
+    epsphi=spec$seastolerance,
+    rmod=spec$trend_boundary,
+    sbound=spec$seas_boundary,
+    sboundatpi=spec$seas_boundary_at_pi,
+    bias=spec$bias_correction,
+    nfcasts=spec$nfcasts,
+    nbcasts=spec$nbcasts,
+    algorithm=enum_extract(tramoseats.SeatsAlgorithm, spec$algorithm)
+  ))
+}
+
+r2p_spec_seats<-function(spec){
+  pspec<-tramoseats.DecompositionSpec$new()
+  pspec$xl_boundary<-spec$xl
+  pspec$approximation<-enum_of(tramoseats.SeatsApproximation, spec$approximation, "SEATS_APP")
+  pspec$seastolerance<-spec$epsphi
+  pspec$trend_boundar<-spec$rmod
+  pspec$seas_boundary<-spec$sbound
+  pspec$seas_boundary_at_pi<-spec$sboundatpi
+  pspec$bias_correction<-spec$bias
+  pspec$nfcasts<-spec$nfcasts
+  pspec$nbcasts<-spec$nbcasts
+  pspec$algorithm<-enum_of(tramoseats.SeatsAlgorithm, spec$algorithm, "SEATS_ALG")
+  return (pspec)
+}
 
 p2r_spec_tramoseats<-function(pspec){
-  return (structure(list(tramo=p2r_spec_tramo(pspec$tramo)), class="JD3TRAMOSEATSSPEC"))
+  return (structure(list(
+    tramo=p2r_spec_tramo(pspec$tramo),
+    seats=p2r_spec_seats(pspec$seats),
+    benchmarking=p2r_spec_benchmarking(pspec$benchmarking)
+    ), class="JD3TRAMOSEATSSPEC"))
+}
+
+r2p_spec_tramoseats<-function(r){
+  p<-tramoseats.Spec$new()
+  p$tramo<-r2p_spec_tramo(r$tramo)
+  p$seats<-r2p_spec_seats(r$seats)
+  p$benchmarking<-r2p_spec_benchmarking(r$benchmarking)
+  return (p)
 }
