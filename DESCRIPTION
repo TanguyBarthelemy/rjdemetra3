@@ -31,6 +31,7 @@ RoxygenNote: 7.1.1
 BugReports: https://github.com/jdemetra/rjdemetra3/issues
 Encoding: UTF-8
 Collate: 
+    'common_spec.R'
     'jd3_ts.R'
     'zzz.R'
     'jd3_rslts.R'

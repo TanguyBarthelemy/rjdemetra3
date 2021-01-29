@@ -1,3 +1,6 @@
+#' @include common_spec.R
+NULL
+
 identical_na <- function(x){
   identical(x, NA) ||
     identical(x, NA_character_) ||
@@ -6,7 +9,6 @@ identical_na <- function(x){
     identical(x, NA_real_) ||
     identical(x, NaN)
 }
-
 
 ramp <- function(start = 1990, end = 2020,
                  start_ramp, end_ramp, frequency = 12){
@@ -62,30 +64,6 @@ r2j_ldt<-function(dt){
   return (.jcall(jdt, "Ljava/time/LocalDateTime;", "atStartOfDay"))
 }
 
-jd2r_span <- function(jspan){
-
-  type<-.jcall(.jcall(jspan, "Ldemetra/timeseries/TimeSelector$SelectionType;", "getType"), "S","name")
-  d0<-j2r_ldt(.jcall(jspan, "Ljava/time/LocalDateTime;", "getD0"))
-  d1<-j2r_ldt(.jcall(jspan, "Ljava/time/LocalDateTime;", "getD1"))
-  n0<-.jcall(jspan, "I", "getN0")
-  n1<-.jcall(jspan, "I", "getN1")
-
-  return (structure(list(type=type, d0=d0, d1=d1, n0=n0, n1=n1), class= "JD3SPAN"))
-}
-
-r2jd_span <- function(span){
-
-  if (span$type == "All") return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "all"))
-  if (span$type == "First")return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "first", as.integer(span$n0)))
-  if (span$type == "Last")return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "last", as.integer(span$n1)))
-  if (span$type == "Excluding")return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "excluding", as.integer(span$n0), as.integer(span$n1)))
-  if (span$type == "From"){
-    return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "from", as.integer(span$n0)))
-  }
-  return (.jcall("demetra/timeseries/TimeSelector", "Ldemetra/timeseries/TimeSelector;", "none"))
-}
-
-
 
 jd2r_parameters <- function(jparams){
   if (is.jnull(jparams))
@@ -104,75 +82,6 @@ jd2r_parameters <- function(jparams){
   data_param
 }
 
-jd2r_spec_benchmarking<-function(spec){
-  enabled<-.jcall(spec, "Z", "isEnabled")
-  forecast<-.jcall(spec, "Z", "isForecast")
-  target<-.jcall(.jcall(spec, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Target;", "getTarget"), "S", "name")
-  rho<-.jcall(spec, "D", "getRho")
-  lambda<-.jcall(spec, "D", "getLambda")
-  bias<-.jcall(.jcall(spec, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$BiasCorrection;", "getBiasCorrection"), "S", "name")
-  return (list(enabled=enabled, forecast=forecast, target=target,
-               rho=rho, lambda=lambda, bias=bias))
-}
-
-r2jd_spec_benchmarking<-function(spec){
-  jbuilder<-.jcall("demetra/sa/benchmarking/SaBenchmarkingSpec", "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "builder")
-  jtarget<-.jcall("demetra/sa/benchmarking/SaBenchmarkingSpec$Target", "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Target;", "valueOf", spec$target)
-  jbias<-.jcall("demetra/sa/benchmarking/SaBenchmarkingSpec$BiasCorrection", "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$BiasCorrection;", "valueOf", spec$bias)
-
-  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "enabled", spec$enabled)
-  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "forecast", spec$forecast)
-  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "target", jtarget)
-  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "rho", spec$rho)
-  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "lambda", spec$lambda)
-  jbuilder<-.jcall(jbuilder, "Ldemetra/sa/benchmarking/SaBenchmarkingSpec$Builder;", "biasCorrection", jbias)
-  jval<-.jcall(jbuilder, "Ldemetra/util/Validatable;", "build")
-  return (.jcast(jval, "demetra/sa/benchmarking/SaBenchmarkingSpec"))
-}
-
-jd2r_spec_arima<-function(spec){
-  jarima<-.jcall(spec, "Ldemetra/arima/SarimaSpec;", "getArima")
-  p <-.jcall(jarima, "I", "getP")
-  d <-.jcall(jarima, "I", "getD")
-  q <-.jcall(jarima, "I", "getQ")
-  bp <-.jcall(jarima, "I", "getBp")
-  bd <-.jcall(jarima, "I", "getBd")
-  bq <-.jcall(jarima, "I", "getBq")
-  coef.spec <- NA
-  if (! .jcall(jarima, "Z", "isUndefined")){
-    coef <- TRUE
-    phi <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getPhi")
-    bphi <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getBphi")
-    theta <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getTheta")
-    btheta <-.jcall(jarima, "[Ldemetra/data/Parameter;", "getBtheta")
-    coef.spec <-
-      rbind(jd2r_parameters(phi),
-            jd2r_parameters(bphi),
-            jd2r_parameters(theta),
-            spec<-spec_tramo_default("TRfull")
-            (btheta))
-
-  }
-  return (list(p=p,d=d,q=q,bp=bp,bd=bd,bq=bq,coef.spec=coef.spec))
-}
-
-r2jd_arima<-function(arima){
-
-  jbuilder<-.jcall("demetra/arima/SarimaSpec", "Ldemetra/arima/SarimaSpec$Builder;", "builder")
-  jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "d", as.integer(arima$d))
-  jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bd", as.integer(arima$bd))
-  if (is.na(arima$coef.spec)){
-    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "p", as.integer(arima$p))
-    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "q", as.integer(arima$q))
-    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bp", as.integer(arima$bp))
-    jbuilder<-.jcall(jbuilder, "Ldemetra/arima/SarimaSpec$Builder;", "bq", as.integer(arima$bq))
-  }else{
-    # TODO
-    stop("Not implemented yet")
-  }
-  jval<-.jcall(jbuilder, "Ldemetra/util/Validatable;", "build")
-  return (.jcast(jval, "demetra/arima/SarimaSpec"))
-}
 
 jd2r_enumlist<-function(jrslt){
   if (is.jnull(jrslt)) return (NULL)
@@ -188,16 +97,6 @@ jd2r_enumlist<-function(jrslt){
 }
 
 #### PROTOBUF FUNCTIONS
-
-
-enum_extract<-function(type, p){
-  name<-type$value(number=p)$name()
-  return (substring(name, regexpr("_", name)+1))
-}
-
-enum_of<-function(type, code, prefix){
-  i<-type$value(name=paste(prefix, code, sep='_'))$number()
-}
 
 p2r_likelihood<-function(p){
   return (list(nobs=p$nobs, neffectiveobs=p$neffectiveobs, nparams=p$nparams,
@@ -220,7 +119,7 @@ p2r_ts<-function(p){
 }
 
 
-p2r_parameters<-function(p){
+p2r_parameters_rslt<-function(p){
   if (is.null(p))
     return (NULL)
   if (length(p) == 0)
@@ -239,50 +138,6 @@ p2r_arima<-function(p){
   return (structure(list(name=p$name, innovationvariance=p$innovation_variance, ar=p$ar, delta=p$delta, ma=p$ma), class= "JD3ARIMA"))
 }
 
-
-p2r_span<-function(span){
-
-  type<-enum_extract(jd3.SelectionType, span$type)
-  d<-span$d0
-  if (nchar(d)>0)  dt0<-as.Date(d) else dt0=NULL
-  d<-span$d1
-  if (nchar(d)>0)  dt1<-as.Date(d) else dt1=NULL
-
-  return (structure(list(type=type, d0=dt0, d1=dt1, n0=span$n0, n1=span$n1), class= "JD3SPAN"))
-}
-
-r2p_span<-function(rspan){
-  pspan<-jd3.TimeSelector$new()
-  pspan$type<-enum_of(jd3.SelectionType, rspan$type, "SPAN")
-  pspan$n0<-rspan$n0
-  pspan$n1<-rspan$n1
-  pspan$d0<-as.character(rspan$d0)
-  pspan$d1<-as.character(rspan$d1)
-
-  return (pspan)
-}
-
-p2r_spec_benchmarking<-function(p){
-  return (list(
-    enabled=p$enabled,
-    target=enum_extract(sa.BenchmarkingTarget, p$target),
-    lambda=p$lambda,
-    rho=p$rho,
-    bias=enum_extract(sa.BenchmarkingBias, p$bias),
-    forecast=p$forecast
-  ))
-}
-
-r2p_spec_benchmarking<-function(r){
-  p<-sa.BenchmarkingSpec$new()
-  p$enabled<-r$enabled
-  p$target<-enum_of(sa.BenchmarkingTarget, r$target, "BENCH_TARGET")
-  p$lambda<-r$lambda
-  p$rho<-r$rho
-  p$bias<-enum_of(sa.BenchmarkingBias, r$bias, "BENCH_BIAS")
-  p$forecast<-r$forecast
-  return (p)
-}
 
 p2r_sacomponent<-function(p){
   return (list(type=enum_extract(sa.ComponentType, p$type), data=p2r_ts(p$data), stde=p2r_ts(p$stde), nbcasts=p$nbcasts, nfcasts=p$nfcasts))

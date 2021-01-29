@@ -4,7 +4,7 @@
 \alias{spec_tramoseats_default}
 \title{Title}
 \usage{
-spec_tramoseats_default(name)
+spec_tramoseats_default(name = "rsafull")
 }
 \arguments{
 \item{name}{}

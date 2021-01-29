@@ -4,7 +4,7 @@
 \alias{spec_tramo_default}
 \title{Title}
 \usage{
-spec_tramo_default(name)
+spec_tramo_default(name = "trfull")
 }
 \arguments{
 \item{name}{}

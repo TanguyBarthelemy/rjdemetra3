@@ -24,15 +24,15 @@ enum SeatsAlgorithm{
 message DecompositionSpec {
 
 	double xl_boundary = 1;
-  SeatsApproximation approximation = 2;
-  double seastolerance = 3;
-  double trend_boundary = 4;
+    SeatsApproximation approximation = 2;
+    double seastolerance = 3;
+    double trend_boundary = 4;
 	double seas_boundary = 5;
-  double seas_boundary_at_pi = 6;
+    double seas_boundary_at_pi = 6;
 	bool bias_correction = 7;
-  int32 nfcasts = 8;
+    int32 nfcasts = 8;
 	int32 nbcasts = 9;
-  SeatsAlgorithm algorithm = 10;
+    SeatsAlgorithm algorithm = 10;
 }
 
 enum AutomaticTradingDays {
@@ -71,7 +71,7 @@ message TramoSpec {
 
 	message OutlierSpec{
 		bool enabled = 1;
-	    jd3.TimeSelector span = 2;
+	  jd3.TimeSelector span = 2;
 		bool ao =3;
 		bool ls = 4;
 		bool tc = 5;
@@ -141,7 +141,7 @@ message TramoSpec {
 	TransformSpec transform = 2;
 	OutlierSpec outlier = 3;
 	regarima.SarimaSpec arima = 4;
-    AutoModelSpec automodel = 5;
+  AutoModelSpec automodel = 5;
 	RegressionSpec regression = 6;
 	EstimateSpec estimate= 7;
 }
