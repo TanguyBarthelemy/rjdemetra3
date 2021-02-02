@@ -23,9 +23,12 @@ p2r_var<-function(p){
 p2r_regarima_rslts<-function(p){
   log<-p$transformation == regarima.Transformation$FN_LOG
   return (list(log=log, preadjustment = enum_extract(regarima.LengthOfPeriod, p$preadjustment),
-               likelihood=p2r_likelihood(p$likelihood),
-               variables=p2r_var(p$variables),
+               y=p$y,
+               x=p2r_matrix(p$x),
                sarima=p2r_sarima(p$sarima),
+               likelihood=p2r_likelihood(p$likelihood),
+               res=p$residuals,
+               variables=p2r_var(p$variables),
                coefficients=p$coefficients,
                covariance=p2r_matrix(p$covariance)))
 }

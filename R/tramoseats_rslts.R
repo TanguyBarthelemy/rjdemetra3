@@ -26,7 +26,7 @@ p2r_seats_rslts<-function(p){
     list(
       seatsmodel=p2r_arima(p$seats_model),
       canonicaldecomposition=p2r_ucarima(p$canonical_decomposition),
-      stochastics=lapply(p$stochastic_series, function(z){p2r_sacomponent(z)})),
+      stochastics=p2r_sa_decomposition(p$stochastics, T)),
     class= "JD3SEATS"))
 
 }

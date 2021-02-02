@@ -11,7 +11,7 @@ NULL
 #' @export
 #'
 #' @examples
-regarima<-function(ts, spec, context=NULL){
+regarima<-function(ts, spec="rsa4", context=NULL){
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
     jrslt<-.jcall("demetra/x13/r/RegArima", "Ldemetra/x13/r/RegArima$Results;", "process", jts, spec)
@@ -39,7 +39,7 @@ regarima<-function(ts, spec, context=NULL){
 #' @export
 #'
 #' @examples
-x13<-function(ts, spec, context=NULL){
+x13<-function(ts, spec="rsa4", context=NULL){
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
     jrslt<-.jcall("demetra/x13/r/X13", "Ldemetra/x13/r/X13$Results;", "process", jts, spec)

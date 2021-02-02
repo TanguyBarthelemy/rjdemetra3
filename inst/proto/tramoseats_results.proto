@@ -18,12 +18,12 @@ message SeatsResults{
   jd3.ArimaModel seats_model = 1;
   bool mean = 2;
   CanonicalDecomposition canonical_decomposition = 3;   
-  repeated sa.Component stochastic_series = 5;
+  sa.SaDecomposition stochastics = 4;
 }
 
 message TramoSeatsResults{
 	regarima.RegArimaEstimation preprocessing = 1;
 	SeatsResults decomposition = 2;
     sa.SaDecomposition final = 3;
-
+	sa.VarianceDecomposition variance_decomposiiton = 4;
 }

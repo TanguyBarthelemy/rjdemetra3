@@ -113,7 +113,7 @@ p2r_matrix<-function(p){
 p2r_ts<-function(p){
   if (length(p$values) == 0)
     return (NULL)
-  s<-ts(data=p$values, frequency = p$period, start = c(p$start_year, p$start_period))
+  s<-ts(data=p$values, frequency = p$annual_frequency, start = c(p$start_year, p$start_period))
   `attr<-`(s, "name", p$name)
   return (s)
 }
@@ -131,21 +131,98 @@ p2r_parameters_rslt<-function(p){
 
 p2r_sarima<-function(p){
   return (structure(list(period=p$period, p = p$p, d=p$d, q=p$q, bp = p$bp, bd = p$bd, bq = p$bq,
-               parameters=p$parameters, covariance=p2r_matrix(p$covariance)), class= "JD3SARIMA"))
+               parameters=p$parameters, covariance=p2r_matrix(p$covariance), score=p$score), class= "JD3SARIMA"))
 }
 
 p2r_arima<-function(p){
   return (structure(list(name=p$name, innovationvariance=p$innovation_variance, ar=p$ar, delta=p$delta, ma=p$ma), class= "JD3ARIMA"))
 }
 
-
-p2r_sacomponent<-function(p){
-  return (list(type=enum_extract(sa.ComponentType, p$type), data=p2r_ts(p$data), stde=p2r_ts(p$stde), nbcasts=p$nbcasts, nfcasts=p$nfcasts))
+ts_move<-function(period, freq, delta){
+  if (delta == 0)return (period)
+  if (freq == 1)return (c(period[1]+delta, 1))
+  x<-period[1]*freq+(period[2]+delta-1)
+  return (c(x %/% freq, (x %% freq)+1))
 }
 
-p2r_sa_decomposition<-function(p){
-  return (list(mode = enum_extract(sa.DecompositionMode, p$mode),
-               components=lapply(p$components, function(z){p2r_sacomponent(z)})))
+p2r_component<-function(p){
+  s<-p$data$values
+  n<-length(s)
+  if (n == 0) return (NULL)
+  freq<-p$data$annual_frequency
+  start<-c(p$data$start_year, p$data$start_period)
+  nb<-p$nbcasts
+  nf<-p$nfcasts
+
+  val<-ts(s[(nb+1):(n-nf)], frequency = freq, start=ts_move(start, freq, nb))
+  rslt<-list(data=val)
+  if (nb > 0){
+    bcasts<-ts(s[1:nb], frequency = freq, start=start)
+    rslt[['bcasts']]<-bcasts
+  }
+  if (nf > 0){
+    fcasts<-ts(s[(n-nf+1):n], frequency = freq, start=ts_move(start, freq, n-nf))
+    rslt[['fcasts']]<-fcasts
+  }
+  return (rslt)
+}
+
+p2r_sacomponent<-function(p){
+  e<-p$stde
+  if (is.null(e)) return (p2r_component(p))
+  e<-p$stde$values
+
+  s<-p$data$values
+  n<-length(s)
+  if (n == 0) return (NULL)
+  freq<-p$data$annual_frequency
+  start<-c(p$data$start_year, p$data$start_period)
+  nb<-p$nbcasts
+  nf<-p$nfcasts
+  dstart<-ts_move(start, freq, nb)
+  fstart<-ts_move(start, freq, n-nf)
+
+  idx<-(nb+1):(n-nf)
+  data<-ts(s[idx], frequency = freq, dstart)
+  edata<-ts(e[idx], frequency = freq, dstart)
+
+  rslt<-list(data=data, data.stde=edata)
+  if (nb > 0){
+    idx<-1:nb
+    bcasts<-ts(s[idx], frequency = freq, start=start)
+    ebcasts<-ts(e[idx], frequency = freq, start=start)
+    rslt[['bcasts']]<-bcasts
+    rslt[['bcasts.stde']]<-ebcasts
+  }
+  if (nf > 0){
+    idx<-(n-nf+1):n
+    fcasts<-ts(s[idx], frequency = freq, start=fstart)
+    efcasts<-ts(e[idx], frequency = freq, start=fstart)
+    rslt[['fcasts']]<-fcasts
+    rslt[['fcasts.stde']]<-efcasts
+  }
+
+  return (rslt)
+}
+
+p2r_sa_decomposition<-function(p, full=F){
+  if (full){
+    return (list(mode = enum_extract(sa.DecompositionMode, p$mode),
+                 series=p2r_sacomponent(p$series),
+                 sa=p2r_sacomponent(p$seasonally_adjusted),
+                 t=p2r_sacomponent(p$trend),
+                 s=p2r_sacomponent(p$seasonal),
+                 i=p2r_sacomponent(p$irregular)
+    ))
+  }else{
+    return (list(mode = enum_extract(sa.DecompositionMode, p$mode),
+                 series=p2r_component(p$series),
+                 sa=p2r_component(p$seasonally_adjusted),
+                 t=p2r_component(p$trend),
+                 s=p2r_component(p$seasonal),
+                 i=p2r_component(p$irregular)
+    ))
+  }
 }
 
 p2r_ucarima<-function(p){

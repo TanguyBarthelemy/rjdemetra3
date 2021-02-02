@@ -12,7 +12,7 @@ NULL
 #' @export
 #'
 #' @examples
-tramo<-function(ts, spec, context=NULL){
+tramo<-function(ts, spec="trfull", context=NULL){
   # TODO : check parameters
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
@@ -44,7 +44,7 @@ tramo<-function(ts, spec, context=NULL){
 #' @export
 #'
 #' @examples
-tramoseats<-function(ts, spec, context=NULL){
+tramoseats<-function(ts, spec="rsafull", context=NULL){
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
     jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/r/TramoSeats$Results;", "process", jts, spec)

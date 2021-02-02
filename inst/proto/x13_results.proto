@@ -74,10 +74,31 @@ message X11Results{
 	double qm2 = 13; 
  }
  
+ message X13Finals{
+    jd3.TsData d10final = 1;
+	jd3.TsData d11final = 2;
+	jd3.TsData d12final = 3;
+	jd3.TsData d13final = 4;
+	jd3.TsData d16 = 5;
+	jd3.TsData d18 = 6;
+    jd3.TsData d10a = 7;
+	jd3.TsData d11a = 8;
+	jd3.TsData d12a = 9;
+	jd3.TsData d16a = 10;
+	jd3.TsData d18a = 11;
+    
+	jd3.TsData e1 = 12;
+	jd3.TsData e2 = 13;
+	jd3.TsData e3 = 14;
+	jd3.TsData e11 = 15;
+ 
+ }
+ 
  message X13Results{
 	regarima.RegArimaEstimation preprocessing = 1;
 	X11Results decomposition = 2;
-    sa.SaDecomposition final = 3;
+    X13Finals final = 3;
 	MStatistics mstatistics = 10;
+	sa.VarianceDecomposition variance_decomposiiton = 4;
 
 }
