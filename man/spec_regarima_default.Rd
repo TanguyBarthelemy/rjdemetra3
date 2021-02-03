@@ -4,7 +4,7 @@
 \alias{spec_regarima_default}
 \title{Title}
 \usage{
-spec_regarima_default(name)
+spec_regarima_default(name = "rg4")
 }
 \arguments{
 \item{name}{}

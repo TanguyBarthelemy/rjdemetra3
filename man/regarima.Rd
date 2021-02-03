@@ -4,7 +4,7 @@
 \alias{regarima}
 \title{Title}
 \usage{
-regarima(ts, spec, context = NULL)
+regarima(ts, spec = "rsa4", context = NULL)
 }
 \arguments{
 \item{context}{}

@@ -39,7 +39,9 @@ p2r_x13_rslts<-function(p){
         m11=p$mstatistics$m11,
         q=p$mstatistics$q,
         qm2=p$mstatistics$qm2
-      ))
+      ),
+      vardecomposition=p$variance_decomposition$as.list()
+      )
     ,
     class= "JD3X13"))
 }

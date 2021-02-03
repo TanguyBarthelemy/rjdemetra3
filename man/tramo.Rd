@@ -4,7 +4,7 @@
 \alias{tramo}
 \title{Title}
 \usage{
-tramo(ts, spec, context = NULL)
+tramo(ts, spec = "trfull", context = NULL)
 }
 \arguments{
 \item{context}{}

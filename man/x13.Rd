@@ -4,7 +4,7 @@
 \alias{x13}
 \title{Title}
 \usage{
-x13(ts, spec, context = NULL)
+x13(ts, spec = "rsa4", context = NULL)
 }
 \arguments{
 \item{context}{}

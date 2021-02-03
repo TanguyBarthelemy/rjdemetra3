@@ -4,7 +4,7 @@
 \alias{spec_x13_default}
 \title{Title}
 \usage{
-spec_x13_default(name)
+spec_x13_default(name = "rsa4")
 }
 \arguments{
 \item{name}{}

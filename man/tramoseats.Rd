@@ -4,7 +4,7 @@
 \alias{tramoseats}
 \title{Title}
 \usage{
-tramoseats(ts, spec, context = NULL)
+tramoseats(ts, spec = "rsafull", context = NULL)
 }
 \arguments{
 \item{context}{}

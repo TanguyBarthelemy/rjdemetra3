@@ -82,7 +82,7 @@ p2r_spec_tramo<-function(pspec){
   # TODO: complete regression
   regression<-list(mean=r$mean, td=td, easter=easter)
   e<-pspec$estimate
-  estimate<-list(span=p2r_span(e$span), tol=e$tol, ubp=e$ubp)
+  estimate<-list(span=p2r_span(e$span), ml=e$ml, tol=e$tol, ubp=e$ubp)
   return (structure(
     list(basic=basic, transform=transform, outlier=outlier,
          arima=arima, automodel=automodel, regression=regression, estimate=estimate),
@@ -93,8 +93,8 @@ p2r_spec_tramo<-function(pspec){
 r2p_spec_tramo<-function(rspec){
   pspec<-tramoseats.TramoSpec$new()
   # BIAS
-  pspec$basic$preliminary_check<-rspec$basic$preliminaryCheck
   pspec$basic$span<-r2p_span(rspec$basic$span)
+  pspec$basic$preliminary_check<-rspec$basic$preliminaryCheck
 
   # TRANSFORM
   pspec$transform$transformation<-enum_of(regarima.Transformation, rspec$transform$fn, "FN")
@@ -136,19 +136,20 @@ r2p_spec_tramo<-function(rspec){
   pspec$regression$td$lp<-enum_of(regarima.LengthOfPeriod, rspec$regression$td$lp, "LP")
   pspec$regression$td$holidays<-rspec$regression$td$holidays
   pspec$regression$td$users<-rspec$regression$td$users
+  pspec$regression$td$w<-rspec$regression$td$w
   pspec$regression$td$test <-enum_of(tramoseats.TradingDaysTest, rspec$regression$td$test, "TD")
   pspec$regression$td$auto <-enum_of(tramoseats.AutomaticTradingDays, rspec$regression$td$auto, "TD")
-  pspec$regression$td$w<-rspec$regression$td$w
   pspec$regression$td$ptest<-rspec$regression$td$ptest
 
   #EASTER
   pspec$regression$easter$type<-enum_of(tramoseats.EasterType, rspec$regression$easter$type, "EASTER")
   pspec$regression$easter$duration<-rspec$regression$easter$duration
-  pspec$regression$easter$test<-rspec$regression$easter$test
   pspec$regression$easter$julian<-rspec$regression$easter$julian
+  pspec$regression$easter$test<-rspec$regression$easter$test
 
   #ESTIMATE
   pspec$estimate$span<-r2p_span(rspec$estimate$span)
+  pspec$estimate$ml-rspec$estimate$ml
   pspec$estimate$tol<-rspec$estimate$tol
   pspec$estimate$ubp<-rspec$estimate$ubp
 
@@ -187,14 +188,6 @@ r2p_spec_seats<-function(spec){
   return (pspec)
 }
 
-#' Title
-#'
-#' @param pspec
-#'
-#' @return
-#' @export
-#'
-#' @examples
 p2r_spec_tramoseats<-function(pspec){
   return (structure(list(
     tramo=p2r_spec_tramo(pspec$tramo),
@@ -203,14 +196,6 @@ p2r_spec_tramoseats<-function(pspec){
     ), class="JD3TRAMOSEATSSPEC"))
 }
 
-#' Title
-#'
-#' @param r
-#'
-#' @return
-#' @export
-#'
-#' @examples
 r2p_spec_tramoseats<-function(r){
   p<-tramoseats.Spec$new()
   p$tramo<-r2p_spec_tramo(r$tramo)

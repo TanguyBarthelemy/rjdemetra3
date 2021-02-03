@@ -98,7 +98,7 @@ message X11Results{
 	regarima.RegArimaEstimation preprocessing = 1;
 	X11Results decomposition = 2;
     X13Finals final = 3;
+	sa.VarianceDecomposition variance_decomposition = 4;
 	MStatistics mstatistics = 10;
-	sa.VarianceDecomposition variance_decomposiiton = 4;
 
 }
