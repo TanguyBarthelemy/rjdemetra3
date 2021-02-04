@@ -25,25 +25,11 @@ p2r_x13_rslts<-function(p){
       preprocessing=p2r_regarima_rslts(p$preprocessing),
       decomposition=p2r_x11_rslts(p$decomposition),
       final=p2r_x13_final(p$final),
-      mstats=list(
-        m1=p$mstatistics$m1,
-        m2=p$mstatistics$m2,
-        m3=p$mstatistics$m3,
-        m4=p$mstatistics$m4,
-        m5=p$mstatistics$m5,
-        m6=p$mstatistics$m6,
-        m7=p$mstatistics$m7,
-        m8=p$mstatistics$m8,
-        m9=p$mstatistics$m9,
-        m10=p$mstatistics$m10,
-        m11=p$mstatistics$m11,
-        q=p$mstatistics$q,
-        qm2=p$mstatistics$qm2
-      ),
-      vardecomposition=p$variance_decomposition$as.list()
+      mstats=p$diagnostics_x13$mstatistics$as.list(),
+      diagnostics=p2r_sa_diagnostics(p$diagnostics_sa)
       )
     ,
-    class= "JD3X13"))
+    class= "JD3X13_RSLTS"))
 }
 
 
@@ -84,6 +70,6 @@ p2r_x13_final<-function(p){
       d16a=p2r_ts(p$d16a),
       d18a=p2r_ts(p$d18a)
     ),
-    class= "JD3X11"))
+    class= "JD3X11_RSLTS"))
 }
 

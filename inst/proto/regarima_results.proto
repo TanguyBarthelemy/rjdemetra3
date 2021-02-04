@@ -51,6 +51,12 @@ message MissingEstimation{
 	double stde = 11;
 }
 
+message Diagnostics{
+
+	jd3.NIIDTests residuals_tests = 1;
+
+}
+
 message RegArimaEstimation{
 
 	/* Model  y = Xb + u */
@@ -68,4 +74,5 @@ message RegArimaEstimation{
 	repeated RegressionVariable variables=10;
 	repeated MissingEstimation missings= 11;
 	
+	Diagnostics diagnostics = 12;	
 }

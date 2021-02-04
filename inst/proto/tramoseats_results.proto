@@ -25,5 +25,6 @@ message TramoSeatsResults{
 	regarima.RegArimaEstimation preprocessing = 1;
 	SeatsResults decomposition = 2;
     sa.SaDecomposition final = 3;
-	sa.VarianceDecomposition variance_decomposition = 4;
+	
+	sa.Diagnostics diagnostics_sa= 5;
 }

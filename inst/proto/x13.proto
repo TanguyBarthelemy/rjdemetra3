@@ -138,7 +138,7 @@ message RegArimaSpec {
 		repeated string users = 4;
 		int32 w = 5;
 		RegressionTest test = 6;
-		bool auto_adjust=7;;
+		bool auto_adjust=7;
 	}
 
 	message RegressionSpec{

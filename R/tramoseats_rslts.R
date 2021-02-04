@@ -16,9 +16,9 @@ p2r_tramoseats_rslts<-function(p){
       preprocessing=p2r_regarima_rslts(p$preprocessing),
       decomposition=p2r_seats_rslts(p$decomposition),
       final=p2r_sa_decomposition(p$final),
-      vardecomposition=p$variance_decomposition$as.list()
+      diagnostics=p2r_sa_diagnostics(p$diagnostics_sa)
     ),
-    class= "JD3TRAMOSEATS"))
+    class= "JD3TRAMOSEATS_RSLTS"))
 }
 
 
@@ -32,3 +32,4 @@ p2r_seats_rslts<-function(p){
     class= "JD3SEATS"))
 
 }
+

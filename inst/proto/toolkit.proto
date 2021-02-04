@@ -58,6 +58,14 @@ message Matrix{
 	repeated double values = 4;
 }
 
+message TsMatrix{
+	string name = 1;
+	int32 annual_frequency = 2;
+	int32 start_year = 3;
+	int32 start_period = 4;
+	Matrix values = 5;
+}
+
 message StatisticalTest{
 	double value = 1;
 	double pvalue = 2;

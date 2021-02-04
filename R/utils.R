@@ -118,6 +118,10 @@ p2r_ts<-function(p){
   return (s)
 }
 
+p2r_test<-function(p){
+  return (list(value=p$value, pvalue=p$pvalue, description=p$description))
+}
+
 
 p2r_parameters_rslt<-function(p){
   if (is.null(p))
@@ -169,8 +173,7 @@ p2r_component<-function(p){
 
 p2r_sacomponent<-function(p){
   e<-p$stde
-  if (is.null(e)) return (p2r_component(p))
-  e<-p$stde$values
+  if (length(e) == 0) return (p2r_component(p))
 
   s<-p$data$values
   n<-length(s)
@@ -223,6 +226,18 @@ p2r_sa_decomposition<-function(p, full=F){
                  i=p2r_component(p$irregular)
     ))
   }
+}
+
+p2r_sa_diagnostics<-function(p){
+  return (list(vardecomposition =p$variance_decomposition$as.list(),
+               seas.ftest.i=p2r_test(p$seasonal_ftest_on_irregular),
+               seas.ftest.sa=p2r_test(p$seasonal_ftest_on_sa),
+               seas.qstest.i=p2r_test(p$seasonal_qtest_on_irregular),
+               seas.qstest.sa=p2r_test(p$seasonal_qtest_on_sa),
+               td.ftest.i=p2r_test(p$td_ftest_on_irregular),
+               td.ftest.sa=p2r_test(p$td_ftest_on_sa)
+  ))
+
 }
 
 p2r_ucarima<-function(p){

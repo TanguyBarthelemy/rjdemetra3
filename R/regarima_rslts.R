@@ -22,7 +22,7 @@ p2r_var<-function(p){
 
 p2r_regarima_rslts<-function(p){
   log<-p$transformation == regarima.Transformation$FN_LOG
-  return (list(log=log, preadjustment = enum_extract(regarima.LengthOfPeriod, p$preadjustment),
+  return (structure(list(log=log, preadjustment = enum_extract(regarima.LengthOfPeriod, p$preadjustment),
                y=p$y,
                x=p2r_matrix(p$x),
                sarima=p2r_sarima(p$sarima),
@@ -30,6 +30,13 @@ p2r_regarima_rslts<-function(p){
                res=p$residuals,
                variables=p2r_var(p$variables),
                coefficients=p$coefficients,
-               covariance=p2r_matrix(p$covariance)))
+               covariance=p2r_matrix(p$covariance),
+               diagnostics=p2r_regarima_diagnostics(p$diagnostics)),
+               class="JD3REGARIMA_RSLTS")
+          )
 }
 
+p2r_regarima_diagnostics<-function(p){
+  l<-p$residuals_tests$as.list()
+  testonresiduals<-lapply(l, function(z){p2r_test(z)})
+}
