@@ -1,7 +1,7 @@
 Package: RJDemetra3
 Type: Package
 Title: Interface to 'JDemetra+ 3.0' Seasonal Adjustment Software
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: c(
   person("Alain", "Quartier-la-Tente", role = c("aut", "cre"),
                  email = "alain.quartier@yahoo.fr",
@@ -32,15 +32,14 @@ BugReports: https://github.com/jdemetra/rjdemetra3/issues
 Encoding: UTF-8
 Collate: 
     'common_spec.R'
-    'jd3_ts.R'
-    'zzz.R'
-    'jd3_rslts.R'
     'utils.R'
+    'display.R'
+    'jd3_ts.R'
     'regarima_rslts.R'
-    'tests.R'
     'tramoseats.R'
     'tramoseats_rslts.R'
     'tramoseats_spec.R'
     'x13.R'
     'x13_rslts.R'
     'x13_spec.R'
+    'zzz.R'

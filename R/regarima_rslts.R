@@ -1,4 +1,4 @@
-#' @include utils.R jd3_rslts.R
+#' @include utils.R
 NULL
 
 regarima_rslts <- function(jrslts){

@@ -1,4 +1,4 @@
-#' @include utils.R jd3_rslts.R regarima_rslts.R
+#' @include utils.R regarima_rslts.R
 NULL
 
 tramoseats_rslts <- function(jrslts){

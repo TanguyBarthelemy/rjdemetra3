@@ -99,9 +99,10 @@ jd2r_enumlist<-function(jrslt){
 #### PROTOBUF FUNCTIONS
 
 p2r_likelihood<-function(p){
-  return (list(nobs=p$nobs, neffectiveobs=p$neffectiveobs, nparams=p$nparams,
+  return (structure(list(nobs=p$nobs, neffectiveobs=p$neffectiveobs, nparams=p$nparams,
                ll=p$log_likelihood, adjll=p$adjusted_log_likelihood,
-               aic=p$aic, aicc=p$aicc, bic=p$bic, bicc=p$bicc, ssq=p$ssq))
+               aic=p$aic, aicc=p$aicc, bic=p$bic, bicc=p$bicc, ssq=p$ssq),
+               class = "JD3LIKELIHOOD"))
 }
 
 p2r_matrix<-function(p){
@@ -249,63 +250,4 @@ p2r_ucarima<-function(p){
     class= "JD3UCARIMA"))
 }
 
-#' Title
-#'
-#' @param m
-#'
-#' @return
-#' @export
-#'
-#' @examples
-print.JD3ARIMA<-function(m){
-  cat(m$name, "\n\n")
-  cat("AR: ", m$ar, "\n")
-  cat("DIF: ", m$delta, "\n")
-  cat("MA: ", m$ma, "\n")
-  cat("var: ", m$innovationvariance, "\n\n")
-}
-
-
-#' Title
-#'
-#' @param ucm
-#'
-#' @return
-#' @export
-#'
-#' @examples
-print.JD3UCARIMA<-function(ucm){
-print(ucm$model)
-lapply(ucm$components, function(z){print(z)})
-}
-
-
-
-
-#' Title
-#'
-#' @param span
-#'
-#' @return
-#' @export
-#'
-#' @examples
-print.JD3SPAN<-function(span){
-  type<-span$type
-  d0<-span$d0
-  d1<-span$d1
-  n0<-span$n0
-  n1<-span$n1
-
-  if (type=="ALL") {x<-"All"}
-  else if (type=="FROM") {x<-paste("From",d0, sep=" ")}
-  else if (type=="To") {x<-paste("Until",d1, sep=" ")}
-  else if (type=="BETWEEN") {x<-paste(d0,d1,sep=" - ")}
-  else if (type=="FIRST") {x<-paste("All but first",n0,"periods", sep=" ")}
-  else if (type=="LAST") {x<-paste("All but last",n1,"periods", sep=" ")}
-  else if (type=="EXCLUDING") {x<-paste("All but first",n0,"periods and last",n1,"periods", sep=" ")}
-  else {x<- "Undefined"}
-
-  print(x)
-}
 
