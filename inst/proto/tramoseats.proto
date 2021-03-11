@@ -99,6 +99,7 @@ message TramoSpec {
 		int32 duration = 2;
 		bool julian = 3;
 		bool test = 4;
+		jd3.Parameter coefficient = 10;
 	}
 	
 	message TradingDaysSpec{
@@ -111,23 +112,19 @@ message TramoSpec {
 		TradingDaysTest test = 6;
 		AutomaticTradingDays auto = 7;
 		double ptest = 8;
-		
+		repeated jd3.Parameter tdcoefficient = 10;
+		jd3.Parameter lpcoefficient = 11;
 	}
 	
 	message RegressionSpec{
-		message PrespecifiedVariable{
-			string name = 1;
-			repeated jd3.Parameter parameters = 2;
-		}
 		
-		bool mean = 1;
+		jd3.Parameter mean = 1;
 		TradingDaysSpec td = 2;
 		EasterSpec easter = 3;
 		repeated regarima.Outlier outliers = 4;
 		repeated regarima.Variable users = 5;
 		repeated regarima.InterventionVariable interventions=6;
 		repeated regarima.Ramp ramps = 7;
-		repeated PrespecifiedVariable preadujstments = 8;
 	}
 
 	message EstimateSpec{

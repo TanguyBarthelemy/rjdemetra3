@@ -39,26 +39,36 @@ r2p_span<-function(rspan){
 # row(1): values
 # row(2): Parameters type
 
-p2r_parameters<-function(p){
-  n<-length(p)
-  if (n == 0) return (NULL)
-  r<-sapply(p, function(z){c(z$value, z$type)})
-  return (r)
-}
 
-r2p_parameter<-function(v, t){
+r2p_parameter<-function(r){
   p<-jd3.Parameter$new()
-  p$value<-v
-  p$type<-t
+  if (is.null(r)) return (p)
+
+  p$value<-r$value
+  p$type<-enum_of(jd3.ParameterType, r$type, "PARAMETER")
   return (p)
 }
+
+p2r_parameter<-function(p){
+  if (p$type=='UNSPECIFIED')return (NULL)
+
+  return (list(value = p$value, type=enum_extract(jd3.ParameterType, p$type)))
+}
+
 
 r2p_parameters<-function(r){
 
   n<-length(r)
   if (n == 0) return (NULL)
-  p<-apply(r, 2, function(z){r2p_parameter(z[1], z[2])})
+  p<-apply(r, 2, function(z){r2p_parameter(z)})
     return (p)
+}
+
+p2r_parameters<-function(p){
+  n<-length(p)
+  if (n == 0) return (NULL)
+  r<-sapply(p, function(z){list(value=z$value, type=enum_extract(jd3.ParameterType, z$type))})
+  return (r)
 }
 
 # Sarima

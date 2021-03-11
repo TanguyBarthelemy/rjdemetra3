@@ -39,19 +39,27 @@ message SarimaSpec{
 
 message Variable{
     string name = 1;
-    int32 first_lag = 2;
-	int32 last_lag = 3;
-	map<string, string> metadata = 4;
+	string id = 2;
+    int32 first_lag = 3;
+	int32 last_lag = 4;
+	repeated jd3.Parameter coefficient = 5;
+	map<string, string> metadata = 6;
 }
 
 message Ramp{
-	string start = 1;
-	string end = 2;
+    string name = 1;
+	string start = 2;
+	string end = 3;
+	jd3.Parameter coefficient = 5;
+	map<string, string> metadata = 6;
 }
 
 message Outlier{
-	string code = 1;
-	string position = 2;
+    string name = 1;
+	string code = 2;
+	string position = 3;
+	jd3.Parameter coefficient = 5;
+	map<string, string> metadata = 6;
 }
 
 message InterventionVariable{
@@ -60,8 +68,11 @@ message InterventionVariable{
 		string end = 2;
 	}
     
-	repeated Sequence sequences = 1;
-	double delta = 2;
-	double seasonal_delta = 3;
+    string name = 1;
+	repeated Sequence sequences = 2;
+	double delta = 3;
+	double seasonal_delta = 4;
+	jd3.Parameter coefficient = 5;
+	map<string, string> metadata = 6;
 }
 
