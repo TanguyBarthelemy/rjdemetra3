@@ -2,6 +2,7 @@
 NULL
 
 
+
 .onLoad <- function(libname, pkgname) {
   # For debugging: to see if Jars are effectively loaded
   # options(java.parameters = "-verbose:class")
@@ -21,4 +22,9 @@ NULL
 
   proto.dir <- system.file("proto", package = pkgname)
   readProtoFiles2(protoPath = proto.dir)
+
+  DATE_MIN<<-dateOf(1,1,1)
+  DATE_MAX<<-dateOf(9999, 12, 31)
+
 }
+

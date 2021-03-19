@@ -145,11 +145,11 @@ message RegArimaSpec {
 	}
 
 	message RegressionSpec{
-		jd3.Parameter mean = 1;
+		jd3.NullableParameter mean = 1;
 		TradingDaysSpec td = 2;
 		EasterSpec easter = 3;
 		repeated regarima.Outlier outliers = 4;
-		repeated regarima.Variable users = 5;
+		repeated regarima.TsVariable users = 5;
 		repeated regarima.InterventionVariable interventions=6;
 		repeated regarima.Ramp ramps = 7;
 	}

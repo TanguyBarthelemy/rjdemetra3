@@ -80,7 +80,7 @@ p2r_spec_tramo<-function(pspec){
            ptest=ptd$ptest)
   easter<-list(type=enum_extract(tramoseats.EasterType, pee$type), duration=pee$duration, julian=pee$julian, test=pee$test)
   # TODO: complete regression
-  regression<-list(mean=p2r_parameter(r$mean), td=td, easter=easter)
+  regression<-list(mean=p2r_nullableparameter(r$mean), td=td, easter=easter)
   e<-pspec$estimate
   estimate<-list(span=p2r_span(e$span), ml=e$ml, tol=e$tol, ubp=e$ubp)
   return (structure(
@@ -129,7 +129,7 @@ r2p_spec_tramo<-function(rspec){
 
   #REGRESSION
 
-  pspec$regression$mean=r2p_parameter(rspec$regression$mean)
+  pspec$regression$mean=r2p_nullableparameter(rspec$regression$mean)
 
   #TD
   pspec$regression$td$td<-enum_of(regarima.TradingDays, rspec$regression$td$td, "TD")

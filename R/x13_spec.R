@@ -136,7 +136,7 @@ p2r_spec_regarima<-function(pspec){
 
   # TODO: complete regression
   regression<-list(
-    mean=p2r_parameter(pspec$regression$mean),
+    mean=p2r_nullableparameter(pspec$regression$mean),
     td=td,
     easter=easter
   )
@@ -202,7 +202,7 @@ r2p_spec_regarima<-function(r){
 
   #REGRESSION
 
-  p$regression$mean=r2p_parameter(r$regression$mean)
+  p$regression$mean=r2p_nullableparameter(r$regression$mean)
 
   #TD
   p$regression$td$td<-enum_of(regarima.TradingDays, r$regression$td$td, "TD")

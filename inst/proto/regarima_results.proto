@@ -40,9 +40,7 @@ message RegressionVariable{
 	string name = 1;
 	VariableType var_type = 2;
 	map<string, string> metadata = 3;
-	double coefficient = 4; 
-	double stde = 5;
-	double pvalue = 6;
+	repeated jd3.Parameter coefficients = 4;
 }
 
 message MissingEstimation{
@@ -57,22 +55,30 @@ message Diagnostics{
 
 }
 
-message RegArimaEstimation{
+message RegArimaModel{
 
-	/* Model  y = Xb + u */
-	repeated double y =1;
-	jd3.Matrix x = 2;
-	Sarima sarima = 3;
-	/* Estimation */
-	jd3.LikelihoodStatistics likelihood = 4;
-	repeated double coefficients = 5;
-	jd3.Matrix covariance = 6;
-	repeated double residuals = 7;
-	/* Description of the model */
-	Transformation transformation = 8;
-	LengthOfPeriod preadjustment = 9;
-	repeated RegressionVariable variables=10;
-	repeated MissingEstimation missings= 11;
+	message Description{
+		jd3.TsData series = 1;
+		bool log = 2;
+		LengthOfPeriod preadjustment = 3;
+		bool mean = 4;
+		repeated RegressionVariable variables = 5;
+		regarima.SarimaSpec arima = 6;
+	}
 	
-	Diagnostics diagnostics = 12;	
+	message Estimation{
+		/* Model  y = Xb + u */
+		repeated double y =1;
+		jd3.Matrix x = 2;
+		repeated double b = 3;
+		jd3.Matrix bcovariance = 4;
+		jd3.ParametersEstimation parameters = 5;
+		jd3.LikelihoodStatistics likelihood = 6;
+		repeated double residuals = 7;
+		repeated MissingEstimation missings = 8;
+	}
+	
+	Description description = 1;
+	Estimation estimation = 2;
+	Diagnostics diagnostics = 5;	
 }

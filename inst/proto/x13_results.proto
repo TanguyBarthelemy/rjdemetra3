@@ -100,7 +100,7 @@ message X11Results{
  }
  
  message X13Results{
-	regarima.RegArimaEstimation preprocessing = 1;
+	regarima.RegArimaModel preprocessing = 1;
 	X11Results decomposition = 2;
     X13Finals final = 3;
 

@@ -5,7 +5,7 @@ regarima_rslts <- function(jrslts){
   if (is.jnull(jrslts))
     return (NULL)
   q<-.jcall(jrslts, "[B", "buffer")
-  rq<-RProtoBuf::read(regarima.RegArimaEstimation, q)
+  rq<-RProtoBuf::read(regarima.RegArimaModel, q)
   return (p2r_regarima_rslts(rq))
 }
 
@@ -21,22 +21,40 @@ p2r_var<-function(p){
 }
 
 p2r_regarima_rslts<-function(p){
-  log<-p$transformation == regarima.Transformation$FN_LOG
-  return (structure(list(log=log, preadjustment = enum_extract(regarima.LengthOfPeriod, p$preadjustment),
-               y=p$y,
-               x=p2r_matrix(p$x),
-               sarima=p2r_sarima(p$sarima),
-               likelihood=p2r_likelihood(p$likelihood),
-               res=p$residuals,
-               variables=p2r_var(p$variables),
-               coefficients=p$coefficients,
-               covariance=p2r_matrix(p$covariance),
-               diagnostics=p2r_regarima_diagnostics(p$diagnostics)),
-               class="JD3REGARIMA_RSLTS")
-          )
+
+  return (structure(list(
+    description=p2r_regarima_description(p$description),
+    estimation=p2r_regarima_estimation(p$estimation),
+    diagnostics=p2r_regarima_diagnostics(p$diagnostics)),
+    class="JD3REGARIMA_RSLTS")
+  )
 }
+
+p2r_regarima_description<-function(p){
+  return (list(
+    log=p$log,
+    mean=p$mean,
+    preadjustment = enum_extract(regarima.LengthOfPeriod, p$preadjustment),
+    arima=p2r_spec_sarima(p$arima)
+  ))
+}
+
+p2r_regarima_estimation<-function(p){
+  return (list(
+    y=p$y,
+    X=p2r_matrix(p$x),
+    parameters=p2r_parameters_estimation(p$parameters),
+    b=p$b,
+    bvar=p2r_matrix(p$bcovariance),
+    likelihood=p2r_likelihood(p$likelihood),
+    res=p$residuals
+  ))
+}
+
 
 p2r_regarima_diagnostics<-function(p){
   l<-p$residuals_tests$as.list()
   testonresiduals<-lapply(l, function(z){p2r_test(z)})
 }
+
+

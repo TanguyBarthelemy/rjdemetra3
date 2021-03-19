@@ -134,6 +134,13 @@ p2r_parameters_rslt<-function(p){
   return (data.frame(value=value, type=type))
 }
 
+p2r_parameters_estimation<-function(p){
+  if (is.null(p))
+    return (NULL)
+  return (list(val=p$value, score=p$score, cov=p2r_matrix(p$covariance), description=p$description))
+}
+
+
 p2r_sarima<-function(p){
   return (structure(list(period=p$period, p = p$p, d=p$d, q=p$q, bp = p$bp, bd = p$bd, bq = p$bq,
                parameters=p$parameters, covariance=p2r_matrix(p$covariance), score=p$score), class= "JD3SARIMA"))

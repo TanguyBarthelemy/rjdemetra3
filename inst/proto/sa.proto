@@ -26,6 +26,8 @@ enum DecompositionMode {
   PSEUDOADDITIVE = 3;
 }
 
+
+
 message Component{
 	jd3.TsData data = 1;
 	/* The length of stde should be the same as the length of data */
@@ -83,3 +85,17 @@ message Diagnostics{
 	jd3.StatisticalTest td_ftest_on_irregular = 6;
 	jd3.StatisticalTest td_ftest_on_sa = 7;
 }
+
+enum EstimationPolicy{
+	POLICY_NONE = 0;
+	POLICY_CURRENT = 1;
+	POLICY_FIXED = 2;
+	POLICY_FIXED_PARAMETERS = 3;
+	POLICY_FIXED_AUTOREGRESSIVEPARAMETERS = 4;
+	POLICY_FREE_PARAMETERS = 5;
+	POLICY_LASTOUTLIERS = 6;
+	POLICY_OUTLIERS = 7;
+	POLICY_ARIMA = 8;
+	POLICY_COMPLETE = 9;
+}
+
