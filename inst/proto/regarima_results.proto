@@ -82,3 +82,4 @@ message RegArimaModel{
 	Estimation estimation = 2;
 	Diagnostics diagnostics = 5;	
 }
+

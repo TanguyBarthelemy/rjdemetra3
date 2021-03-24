@@ -123,7 +123,6 @@ p2r_test<-function(p){
   return (list(value=p$value, pvalue=p$pvalue, description=p$description))
 }
 
-
 p2r_parameters_rslt<-function(p){
   if (is.null(p))
     return (NULL)
@@ -133,6 +132,22 @@ p2r_parameters_rslt<-function(p){
   type<-sapply(p, function(z){enum_extract(jd3.ParameterType, z$type)})
   return (data.frame(value=value, type=type))
 }
+
+p2r_parameters_rsltx<-function(p){
+  if (is.null(p))
+    return (NULL)
+  if (length(p) == 0)
+    return (NULL)
+  value<-sapply(p, function(z){z$value})
+  type<-sapply(p, function(z){enum_extract(jd3.ParameterType, z$type)})
+  description<-sapply(p, function(z){z$description})
+
+  rslt<-data.frame(value=value, type=type)
+  row.names(rslt)<-description
+
+  return (rslt)
+}
+
 
 p2r_parameters_estimation<-function(p){
   if (is.null(p))

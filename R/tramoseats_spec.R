@@ -40,7 +40,7 @@ jd2r_spec_tramo<-function(spec, context_dictionary = NULL){
 r2jd_spec_tramo<-function(spec){
   pspec<-r2p_spec_tramo(spec)
   nq<-RProtoBuf::serialize(pspec, NULL)
-  nspec<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramo/TramoSpec;", "of", nq)
+  nspec<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramo/TramoSpec;", "specOf", nq)
   return (nspec)
 }
 

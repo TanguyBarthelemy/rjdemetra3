@@ -119,3 +119,26 @@ print.JD3LIKELIHOOD<-function(ll){
   cat("BIC: ", ll$bic, "\n\n")
 }
 
+#' Title
+#'
+#' @param rslts
+#'
+#' @return
+#' @export
+#'
+#' @examples
+print.JD3REGARIMA_RSLTS<-function(q){
+
+  regs<-do.call("rbind", lapply(q$description$variables, function(z){z$coeff}))
+  xregs<-cbind(regs, stde=NA, t=NA, pvalue=NA)
+  stde<-sqrt(diag(q$estimation$bvar))
+  sel<-xregs$type=='ESTIMATED'
+  t<-xregs$value[sel]/stde
+  ndf<-q$estimation$likelihood$neffectiveobs-q$estimation$likelihood$nparams+1
+  pval<-2*pt(abs(t), ndf, lower.tail = F)
+  xregs$stde[sel]<-stde
+  xregs$t[sel]<-t
+  xregs$pvalue[sel]<-pval
+  print(xregs[-2])
+}
+

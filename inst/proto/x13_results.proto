@@ -106,5 +106,21 @@ message X11Results{
 
 	Diagnostics diagnostics_x13= 4;
 	sa.Diagnostics diagnostics_sa= 5;
+}
 
+
+message RegArimaOutput{
+	regarima.RegArimaModel result = 1;
+	RegArimaSpec estimation_spec = 2;
+	RegArimaSpec result_spec = 3;
+	jd3.ProcessingLogs log = 4;
+	map<string, jd3.ProcessingDetail> details = 5;
+}
+
+message X13Output{
+	X13Results result = 1;
+	Spec estimation_spec = 2;
+	Spec result_spec = 3;
+	jd3.ProcessingLogs log = 4;
+	map<string, jd3.ProcessingDetail> details = 5;
 }

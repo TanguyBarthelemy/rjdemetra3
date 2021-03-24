@@ -85,6 +85,11 @@ message TsData{
 	repeated double values = 5;
 }
 
+message Doubles{
+	string name = 1;
+	repeated double values = 2;
+}
+
 message Matrix{
 	string name = 1;
 	int32 nrows = 2;
@@ -320,3 +325,34 @@ message ModellingContext{
 	map<string, CalendarDefinition> calendars = 1;
 	map<string, TsData> variables = 2; 
 }
+
+enum InformationType {
+	Info = 0;
+	Warning = 1;
+	Error = 2;
+}
+
+message ProcessingDetail{
+	oneof data{
+		TsData ts = 1;
+		Doubles array = 2;
+		Matrix matrix = 3;
+		StatisticalTest test = 4;
+		string message = 5;
+		int32 ivalue = 6;
+		double dvalue = 7;
+	}
+}
+
+message ProcessingInformation {
+    string name = 1;
+    string origin = 2;
+    string msg = 3;
+    InformationType type = 4;
+    repeated ProcessingDetail details = 5;
+}
+
+message ProcessingLogs{
+	repeated ProcessingInformation log = 1;
+}
+

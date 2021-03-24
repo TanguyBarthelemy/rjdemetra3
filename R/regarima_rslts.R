@@ -20,6 +20,18 @@ p2r_var<-function(p){
   return (a)
 }
 
+p2r_variables<-function(p){
+  return (lapply(p, function(v){p2r_variable(v)}))
+}
+
+p2r_variable<-function(p){
+  name<-p$name
+  type<-enum_extract(regarima.VariableType, p$var_type)
+  coeff<-p2r_parameters_rsltx(p$coefficients)
+  return (list(name=name, type=type, coeff=coeff))
+}
+
+
 p2r_regarima_rslts<-function(p){
 
   return (structure(list(
@@ -35,7 +47,8 @@ p2r_regarima_description<-function(p){
     log=p$log,
     mean=p$mean,
     preadjustment = enum_extract(regarima.LengthOfPeriod, p$preadjustment),
-    arima=p2r_spec_sarima(p$arima)
+    arima=p2r_spec_sarima(p$arima),
+    variables=p2r_variables(p$variables)
   ))
 }
 
@@ -56,5 +69,4 @@ p2r_regarima_diagnostics<-function(p){
   l<-p$residuals_tests$as.list()
   testonresiduals<-lapply(l, function(z){p2r_test(z)})
 }
-
 
