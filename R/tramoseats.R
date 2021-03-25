@@ -34,6 +34,39 @@ tramo<-function(ts, spec="trfull", context=NULL){
   }
 }
 
+#' Title
+#'
+#' @param ts
+#' @param spec
+#' @param context
+#'
+#' @return
+#' @export
+#'
+#' @examples
+fast.tramo<-function(ts, spec="trfull", context=NULL){
+  # TODO : check parameters
+  jts<-ts_r2jd(ts)
+  if (is.character(spec)){
+    jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramoseats/r/Tramo$Results;", "process", jts, spec)
+  }else{
+    jspec<-r2jd_spec_tramo(spec)
+    if (is.null(context)){
+      jcontext<-.jnull("demetra/util/r/Dictionary")
+    }else{
+      # TODO
+      jcontext<-.jnull("demetra/util/r/Dictionary")
+    }
+    jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramoseats/r/Tramo$Results;", "process", jts, jspec, jcontext )
+  }
+  if (is.jnull(jrslt)){
+    return (NULL)
+  }else{
+    return (regarima_rslts(jrslt))
+  }
+}
+
+
 tramo_output<-function(q){
   if (is.null(q))
     return (NULL)
