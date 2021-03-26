@@ -16,7 +16,7 @@ tramo<-function(ts, spec="trfull", context=NULL){
   # TODO : check parameters
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
-    jrslt<-.jcall("demetra/tramoseats/r/Tramo", "[B", "generateOutput", jts, spec)
+    jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramo/TramoOutput;", "fullProcess", jts, spec)
   }else{
     jspec<-r2jd_spec_tramo(spec)
     if (is.null(context)){
@@ -25,7 +25,7 @@ tramo<-function(ts, spec="trfull", context=NULL){
       # TODO
       jcontext<-.jnull("demetra/util/r/Dictionary")
     }
-    jrslt<-.jcall("demetra/tramoseats/r/Tramo", "[B", "generateOutput", jts, jspec, jcontext )
+    jrslt<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramo/TramoOutput;", "fullProcess", jts, jspec, jcontext )
   }
   if (is.jnull(jrslt)){
     return (NULL)
@@ -67,9 +67,10 @@ fast.tramo<-function(ts, spec="trfull", context=NULL){
 }
 
 
-tramo_output<-function(q){
-  if (is.null(q))
+tramo_output<-function(jq){
+  if (is.jnull(jq))
     return (NULL)
+  q<-.jcall("demetra/tramoseats/r/Tramo", "[B", "toBuffer", jq)
   p<-RProtoBuf::read(tramoseats.TramoOutput, q)
   return (structure(list(
     result=p2r_regarima_rslts(p$result),

@@ -54,7 +54,7 @@ r2jd_spec_x11<-function(spec){
 r2jd_spec_regarima<-function(spec){
   p<-r2p_spec_regarima(spec)
   b<-RProtoBuf::serialize(p, NULL)
-  nspec<-.jcall("demetra/x13/r/RegArima", "Ldemetra/regarima/RegArimaSpec;", "of", b)
+  nspec<-.jcall("demetra/x13/r/RegArima", "Ldemetra/regarima/RegArimaSpec;", "specOf", b)
   return (nspec)
 }
 
@@ -68,7 +68,7 @@ jd2r_spec_regarima<-function(spec){
 r2jd_spec_x13<-function(spec){
   p<-r2p_spec_x13(spec)
   b<-RProtoBuf::serialize(p, NULL)
-  nspec<-.jcall("demetra/x13/r/X13", "Ldemetra/x13/X13Spec;", "of", b)
+  nspec<-.jcall("demetra/x13/r/X13", "Ldemetra/x13/X13Spec;", "specOf", b)
   return (nspec)
 }
 

@@ -53,7 +53,7 @@ jd2r_spec_tramoseats<-function(spec){
 r2jd_spec_tramoseats<-function(spec){
   pspec<-r2p_spec_tramoseats(spec)
   nq<-RProtoBuf::serialize(pspec, NULL)
-  nspec<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/TramoSeatsSpec;", "of", nq)
+  nspec<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/TramoSeatsSpec;", "specOf", nq)
   return (nspec)
 }
 

@@ -51,7 +51,7 @@ message MissingEstimation{
 
 message Diagnostics{
 
-	jd3.NIIDTests residuals_tests = 1;
+	map<string, jd3.StatisticalTest> residuals_tests = 1;
 
 }
 

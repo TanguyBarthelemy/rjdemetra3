@@ -66,7 +66,8 @@ p2r_regarima_estimation<-function(p){
 
 
 p2r_regarima_diagnostics<-function(p){
-  l<-p$residuals_tests$as.list()
-  testonresiduals<-lapply(l, function(z){p2r_test(z)})
+  tlist<-lapply(p$residuals_tests, function(z){p2r_test(z$value)})
+  tnames<-lapply(p$residuals_tests, function(z){z$key})
+  testonresiduals<-`names<-`(tlist, tnames)
 }
 
