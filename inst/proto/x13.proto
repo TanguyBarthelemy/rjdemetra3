@@ -9,39 +9,36 @@ option java_package = "demetra.x13.io.protobuf";
 option java_outer_classname = "X13Protos";
 
 enum DecompositionMode {
-  UNKNOWN = 0;
-  ADDITIVE = 1;
-  MULTIPLICATIVE = 2;
-  LOGADDITIVE = 3;
-  PSEUDOADDITIVE = 4;
+  MODE_UNKNOWN = 0;
+  MODE_ADDITIVE = 1;
+  MODE_MULTIPLICATIVE = 2;
+  MODE_LOGADDITIVE = 3;
+  MODE_PSEUDOADDITIVE = 4;
 }
   
 enum SeasonalFilter {
-	SEASONAL_FILTER_UNSPECIFIED = 0;
+	SEASONAL_FILTER_MSR=0;
     SEASONAL_FILTER_S3X1=1;
     SEASONAL_FILTER_S3X3=2;
     SEASONAL_FILTER_S3X5=3;
     SEASONAL_FILTER_S3X9=4;
     SEASONAL_FILTER_S3X15=5;
-	SEASONAL_FILTER_MSR=6;
-	SEASONAL_FILTER_STABLE=7;
-    SEASONAL_FILTER_X11DEFAULT=8;
+	SEASONAL_FILTER_STABLE=6;
+    SEASONAL_FILTER_X11DEFAULT=7;
 }
   
 enum CalendarSigma {
-	SIGMA_UNSPECIFIED = 0;
-    SIGMA_NONE=1;
-    SIGMA_SIGNIF=2; 
-    SIGMA_ALL=3;
-    SIGMA_SELECT=4;
+    SIGMA_NONE=0;
+    SIGMA_SIGNIF=1; 
+    SIGMA_ALL=2;
+    SIGMA_SELECT=3;
 }
   
 enum BiasCorrection {
-	BIAS_UNSPECIFIED = 0;
-    BIAS_NONE = 1;
-    BIAS_LEGACY = 2;
-    BIAS_SMOOTH = 3;
-    BIAS_RATIO = 4;	
+    BIAS_NONE = 0;
+    BIAS_LEGACY = 1;
+    BIAS_SMOOTH = 2;
+    BIAS_RATIO = 3;	
 }
 
 message X11Spec {
@@ -61,24 +58,21 @@ message X11Spec {
 }
 
 enum OutlierMethod{
-	OUTLIER_UNSPECIFIED = 0;
-	OUTLIER_ADDONE = 1;
-	OUTLIER_ADDALL = 2;
+	OUTLIER_ADDONE = 0;
+	OUTLIER_ADDALL = 1;
 }
 
 enum EasterType {
-	EASTER_UNSPECIFIED = 0;
-	EASTER_UNUSED = 1;
-	EASTER_STANDARD = 2;
-	EASTER_JULIAN = 3;
-	EASTER_SC = 4;
+	EASTER_UNUSED = 0;
+	EASTER_STANDARD = 1;
+	EASTER_JULIAN = 2;
+	EASTER_SC = 3;
 }
 
 enum RegressionTest {
-    TEST_UNSPECIFIED = 0;
-	TEST_NO = 1;
-	TEST_ADD = 2;
-	TEST_REMOVE = 3;
+	TEST_NO = 0;
+	TEST_ADD = 1;
+	TEST_REMOVE = 2;
 }
 		
 message RegArimaSpec {
@@ -140,12 +134,12 @@ message RegArimaSpec {
 		int32 w = 5;
 		RegressionTest test = 6;
 		bool auto_adjust=7;
-		repeated jd3.Parameter tdcoefficient = 10;
+		repeated jd3.Parameter tdcoefficients = 10;
 		jd3.Parameter lpcoefficient = 11;
 	}
 
 	message RegressionSpec{
-		jd3.NullableParameter mean = 1;
+		regarima.TrendConstant mean = 1;
 		TradingDaysSpec td = 2;
 		EasterSpec easter = 3;
 		repeated regarima.Outlier outliers = 4;

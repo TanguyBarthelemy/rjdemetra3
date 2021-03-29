@@ -6,6 +6,9 @@ enum_extract<-function(type, p){
 }
 
 enum_of<-function(type, code, prefix){
+  if (is.null(code)){
+    return (as.integer(0))
+  }
   i<-type$value(name=paste(prefix, code, sep='_'))$number()
 }
 
@@ -86,7 +89,6 @@ r2p_span<-function(rspan){
 # row(1): values
 # row(2): Parameters type
 
-
 r2p_parameter<-function(r){
   p<-jd3.Parameter$new()
   if (is.null(r)) return (p)
@@ -97,24 +99,28 @@ r2p_parameter<-function(r){
 }
 
 p2r_parameter<-function(p){
+  if (! p$has("type")) return (NULL)
   return (list(value = p$value, type=enum_extract(jd3.ParameterType, p$type)))
 }
 
-p2r_nullableparameter<-function(p){
-  if (p$has("null"))return (NULL)
-  return (list(value = p$data$value, type=enum_extract(jd3.ParameterType, p$data$type)))
+p2r_const<-function(p){
+  if (p$used){
+    return (p2r_parameter(p$coefficient))
+  }else{
+    return (NULL)
+  }
 }
 
-r2p_nullableparameter<-function(r){
-  p<-jd3.NullableParameter$new()
+r2p_const<-function(r){
+  p<-regarima.TrendConstant$new()
   if (is.null(r)){
-    p$null<-google.protobuf.NullValue$NULL_VALUE
+    p$used=F
   }else{
-    p$data<-r2p_parameter(r)
+    p$used=T
+    p$coefficient=r2p_parameter(r)
   }
   return (p)
 }
-
 
 r2p_parameters<-function(r){
 
@@ -157,6 +163,123 @@ r2p_spec_sarima<-function(r){
   return (p)
 }
 
+p2r_outlier<-function(p){
+  return (list(
+   name=p$name,
+  pos=p2r_date(p$position),
+  code=p$code,
+  coef=p2r_parameter(p$coefficient)
+  ))
+}
+
+r2p_outlier<-function(r){
+  p<-regarima.Outlier$new()
+  p$name=r$name
+  p$code<-r$code
+  p$position<-r2p_date(r$pos)
+  p$coefficient<-r2p_parameter(r$coefficient)
+  return (p)
+}
+
+p2r_outliers<-function(p){
+  if (length(p) == 0){return (NULL)}
+  return (lapply(p, function(z){p2r_outlier(z)}))
+}
+
+r2p_outliers<-function(r){
+  if (length(r) == 0){return (list())}
+  l<-list()
+  return (lapply(r, function(z){r2p_outlier(z)}))
+}
+
+p2r_ramp<-function(p){
+  return (list(
+    name=p$name,
+    start=p2r_date(p$start),
+    end=p2r_date(p$end),
+    coef=p2r_parameter(p$coefficient)
+  ))
+}
+
+r2p_ramp<-function(r){
+  p<-regarima.Ramp$new()
+  p$name<-r$name
+  p$start<-r2p_date(r$start)
+  p$end<-r2p_date(r$end)
+  p$coefficient<-r2p_parameter(r$coefficient)
+  return (p)
+}
+
+p2r_ramps<-function(p){
+  if (length(p) == 0){return (NULL)}
+  return (lapply(p, function(z){p2r_ramp(z)}))
+}
+
+r2p_ramps<-function(r){
+  if (length(r) == 0){return (list())}
+  l<-list()
+  return (lapply(r, function(z){r2p_ramp(z)}))
+}
+
+rlags<-function(l0, l1){
+  if (l0 == 0 && l1 == 0) {return (NULL)}
+  if (l0 == l1){return (l0)}
+  else {
+    if (l1 < l0) stop("Invalid lags")
+    return (c(l0, l1))
+    }
+}
+
+regeffect<-function(map){
+  r<-which(sapply(map, function(z){z$key == "regeffect"}))
+  if (length(r) == 0) return ("Undefined")
+  return (map[min(r)]$value)
+}
+
+p2r_uservar<-function(p){
+  l0<-p$first_lag
+  l1<-p$last_lag
+  lapply
+  return (list(
+    id=p$id,
+    name=p$name,
+    lags=rlags(l0, l1),
+    coef=p2r_parameter(p$coefficient),
+    regeffect=regeffect(p$metadata)
+  ))
+}
+
+r2p_uservar<-function(r){
+  p<-regarima.TsVariable.$new()
+  p$name<-r$name
+  p$id<-r$id
+  if (! is.null(r$lags)){
+    if (length(r$lags) ==1){
+      p$first_lag<-r$lags[1]
+      p$last_lag<-r$lags[1]
+    }else if (length(r$lags) ==2){
+      p$first_lag<-r$lags[1]
+      p$last_lag<-r$lags[2]
+    }else
+      stop("Invalid lags")
+  }
+  p$coefficient<-r2p_parameters(r$coef)
+  p$metadata<-list(list(key="regeffect", value=r$regeffect))
+  return (p)
+}
+
+p2r_uservars<-function(p){
+  if (length(p) == 0){return (NULL)}
+  return (lapply(p, function(z){p2r_uservar(z)}))
+}
+
+r2p_uservars<-function(r){
+  if (length(r) == 0){return (list())}
+  l<-list()
+  return (lapply(r, function(z){r2p_uservar(z)}))
+}
+
+
 # Benchmarking
 
 p2r_spec_benchmarking<-function(p){
@@ -180,4 +303,31 @@ r2p_spec_benchmarking<-function(r){
   p$forecast<-r$forecast
   return (p)
 }
+
+
+
+# Benchmarking
+
+p2r_spec_benchmarking<-function(p){
+  return (list(
+    enabled=p$enabled,
+    target=enum_extract(sa.BenchmarkingTarget, p$target),
+    lambda=p$lambda,
+    rho=p$rho,
+    bias=enum_extract(sa.BenchmarkingBias, p$bias),
+    forecast=p$forecast
+  ))
+}
+
+r2p_spec_benchmarking<-function(r){
+  p<-sa.BenchmarkingSpec$new()
+  p$enabled<-r$enabled
+  p$target<-enum_of(sa.BenchmarkingTarget, r$target, "BENCH")
+  p$lambda<-r$lambda
+  p$rho<-r$rho
+  p$bias<-enum_of(sa.BenchmarkingBias, r$bias, "BENCH")
+  p$forecast<-r$forecast
+  return (p)
+}
+
 

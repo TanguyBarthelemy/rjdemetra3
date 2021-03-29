@@ -125,20 +125,25 @@ p2r_spec_regarima<-function(pspec){
     users=unlist(pspec$regression$td$users),
     w=pspec$regression$td$w,
     test=enum_extract(x13.RegressionTest, pspec$regression$td$test),
-    autoadjust=pspec$regression$td$auto_adjust
+    autoadjust=pspec$regression$td$auto_adjust,
+    tdcoefficients=p2r_parameters(pspec$regression$td$tdcoefficients),
+    lpcoefficient=p2r_parameter(pspec$regression$td$lpcoefficient)
   )
 
   easter<-list(
     type=enum_extract(x13.EasterType, pspec$regression$easter$type),
     duration=pspec$regression$easter$duration,
-    test=enum_extract(x13.RegressionTest, pspec$regression$easter$test)
+    test=enum_extract(x13.RegressionTest, pspec$regression$easter$test),
+    coefficient=p2r_parameter(pspec$regression$easter$coefficient)
   )
 
   # TODO: complete regression
   regression<-list(
-    mean=p2r_nullableparameter(pspec$regression$mean),
+    mean=p2r_const(pspec$regression$mean),
     td=td,
-    easter=easter
+    easter=easter,
+    outliers=p2r_outliers(pspec$regression$outliers),
+    ramps=p2r_ramps(pspec$regression$ramps)
   )
 
   estimate<-list(
@@ -202,7 +207,9 @@ r2p_spec_regarima<-function(r){
 
   #REGRESSION
 
-  p$regression$mean=r2p_nullableparameter(r$regression$mean)
+  p$regression$mean=r2p_const(r$regression$mean)
+  p$regression$outliers=r2p_outliers(r$regression$outliers)
+  p$regression$ramps=r2p_ramps(r$regression$ramps)
 
   #TD
   p$regression$td$td<-enum_of(regarima.TradingDays, r$regression$td$td, "TD")
@@ -212,11 +219,14 @@ r2p_spec_regarima<-function(r){
   p$regression$td$w<-r$regression$td$w
   p$regression$td$test <-enum_of(x13.RegressionTest, r$regression$td$test, "TEST")
   p$regression$td$auto_adjust <-r$regression$td$autoadjust
+  p$regression$td$tdcoefficients<-r2p_parameters(r$regression$td$tdcoefficients)
+  p$regression$td$lpcoefficient<-r2p_parameter(r$regression$td$lpcoefficient)
 
   #EASTER
   p$regression$easter$type<-enum_of(x13.EasterType, r$regression$easter$type, "EASTER")
   p$regression$easter$duration<-r$regression$easter$duration
   p$regression$easter$test<-enum_of(x13.RegressionTest, r$regression$easter$test, "TEST")
+  p$regression$easter$coefficient<-r2p_parameter(r$regression$easter$coefficient)
 
   #ESTIMATE
   p$estimate$span<-r2p_span(r$estimate$span)
@@ -247,7 +257,7 @@ p2r_spec_x11<-function(p){
 
 r2p_spec_x11<-function(r){
   p<-x13.X11Spec$new()
-  p$mode<- sa.DecompositionMode$value(name=r$mode)$number()
+  p$mode<- enum_of(x13.DecompositionMode, r$mode, "MODE")
   p$seasonal<-r$seasonal
   p$henderson<-r$henderson
   p$sfilters<-sapply(r$sfilters, function(z){enum_of(x13.SeasonalFilter, z, "SEASONAL")} )

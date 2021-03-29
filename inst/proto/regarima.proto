@@ -44,6 +44,11 @@ message TsVariable{
 	map<string, string> metadata = 6;
 }
 
+message TrendConstant{
+	bool used = 1;
+	jd3.Parameter coefficient = 2;
+}
+
 message Ramp{
     string name = 1;
 	jd3.Date start = 2;

@@ -5,8 +5,6 @@ package jd3;
 option java_package = "demetra.toolkit.io.protobuf";
 option java_outer_classname = "ToolkitProtos";
 
-import "struct.proto";
-
 enum SelectionType {
     SPAN_NONE=0;
 	SPAN_ALL=1;
@@ -62,20 +60,11 @@ message ParametersEstimation{
 	string description = 4; 
 }
 
-
-message NullableParameter{
-  oneof kind {
-    google.protobuf.NullValue null = 1;
-    Parameter data = 2;
-  }
-}
-
 message TsPeriod{
 	int32 annual_frequency = 1;
 	int32 year = 2;
 	int32 pos = 3;
 }
-
 
 message TsData{
 	string name = 1;

@@ -75,12 +75,18 @@ p2r_spec_tramo<-function(pspec){
   ptd<-pspec$regression$td
   pee<-pspec$regression$easter
   td<-list(td=enum_extract(regarima.TradingDays, ptd$td), lp=enum_extract(regarima.LengthOfPeriod, ptd$lp),
-           holidays=ptd$holidays, users=unlist(ptd$users), w=ptd$w
-           , test=enum_extract(tramoseats.TradingDaysTest, ptd$test), auto=enum_extract(tramoseats.AutomaticTradingDays, ptd$auto),
-           ptest=ptd$ptest)
-  easter<-list(type=enum_extract(tramoseats.EasterType, pee$type), duration=pee$duration, julian=pee$julian, test=pee$test)
+           holidays=ptd$holidays, users=unlist(ptd$users), w=ptd$w,
+           test=enum_extract(tramoseats.TradingDaysTest, ptd$test), auto=enum_extract(tramoseats.AutomaticTradingDays, ptd$auto),
+           tdcoefficients=p2r_parameters(ptd$tdcoefficients), lpcoefficient=p2r_parameter(ptd$lpcoefficient))
+  easter<-list(type=enum_extract(tramoseats.EasterType, pee$type), duration=pee$duration, julian=pee$julian, test=pee$test, coefficient=p2r_parameter(pee$coefficient))
   # TODO: complete regression
-  regression<-list(mean=p2r_nullableparameter(r$mean), td=td, easter=easter)
+  regression<-list(
+    mean=p2r_const(r$mean),
+    td=td,
+    easter=easter,
+    outliers=p2r_outliers(r$outliers),
+    ramps=p2r_ramps(r$ramps)
+  )
   e<-pspec$estimate
   estimate<-list(span=p2r_span(e$span), ml=e$ml, tol=e$tol, ubp=e$ubp)
   return (structure(
@@ -129,7 +135,9 @@ r2p_spec_tramo<-function(rspec){
 
   #REGRESSION
 
-  pspec$regression$mean=r2p_nullableparameter(rspec$regression$mean)
+  pspec$regression$mean=r2p_const(rspec$regression$mean)
+  pspec$regression$outliers=r2p_outliers(rspec$regression$outliers)
+  pspec$regression$ramps=r2p_ramps(rspec$regression$ramps)
 
   #TD
   pspec$regression$td$td<-enum_of(regarima.TradingDays, rspec$regression$td$td, "TD")
@@ -140,12 +148,16 @@ r2p_spec_tramo<-function(rspec){
   pspec$regression$td$test <-enum_of(tramoseats.TradingDaysTest, rspec$regression$td$test, "TD")
   pspec$regression$td$auto <-enum_of(tramoseats.AutomaticTradingDays, rspec$regression$td$auto, "TD")
   pspec$regression$td$ptest<-rspec$regression$td$ptest
+  pspec$regression$td$tdcoefficients<-r2p_parameters(rspec$regression$td$tdcoefficients)
+  pspec$regression$td$lpcoefficient<-r2p_parameter(rspec$regression$td$lpcoefficient)
 
   #EASTER
   pspec$regression$easter$type<-enum_of(tramoseats.EasterType, rspec$regression$easter$type, "EASTER")
   pspec$regression$easter$duration<-rspec$regression$easter$duration
   pspec$regression$easter$julian<-rspec$regression$easter$julian
   pspec$regression$easter$test<-rspec$regression$easter$test
+  pspec$regression$easter$coefficient<-r2p_parameter(rspec$regression$easter$coefficient)
+
 
   #ESTIMATE
   pspec$estimate$span<-r2p_span(rspec$estimate$span)

@@ -79,7 +79,6 @@ tramo_output<-function(jq){
   ),
   class="JD3TRAMO_OUTPUT")
   )
-
 }
 
 #' Title
@@ -93,6 +92,70 @@ tramo_output<-function(jq){
 #'
 #' @examples
 tramoseats<-function(ts, spec="rsafull", context=NULL){
+  # TODO : check parameters
+  jts<-ts_r2jd(ts)
+  if (is.character(spec)){
+    jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/io/protobuf/TramoSeatsOutput;", "fullProcess", jts, spec)
+  }else{
+    jspec<-r2jd_spec_tramoseats(spec)
+    if (is.null(context)){
+      jcontext<-.jnull("demetra/util/r/Dictionary")
+    }else{
+      # TODO
+      jcontext<-.jnull("demetra/util/r/Dictionary")
+    }
+    jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/io/protobuf/TramoSeatsOutput;", "fullProcess", jts, jspec, jcontext )
+  }
+  if (is.jnull(jrslt)){
+    return (NULL)
+  }else{
+    return (tramoseats_output(jrslt))
+  }
+}
+
+#' Title
+#'
+#' @param spec
+#' @param refspec
+#' @param policy
+#' @param start
+#' @param end
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tramo.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
+
+}
+
+#' Title
+#'
+#' @param spec
+#' @param refspec
+#' @param policy
+#' @param start
+#' @param end
+#'
+#' @return
+#' @export
+#'
+#' @examples
+tramoseats.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
+
+}
+
+#' Title
+#'
+#' @param ts
+#' @param spec
+#' @param context
+#'
+#' @return
+#' @export
+#'
+#' @examples
+fast.tramoseats<-function(ts, spec="rsafull", context=NULL){
   jts<-ts_r2jd(ts)
   if (is.character(spec)){
     jrslt<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/r/TramoSeats$Results;", "process", jts, spec)
@@ -108,6 +171,21 @@ tramoseats<-function(ts, spec="rsafull", context=NULL){
   }else{
     return (tramoseats_rslts(jrslt))
   }
+}
+
+tramoseats_output<-function(jq){
+  if (is.jnull(jq))
+    return (NULL)
+  q<-.jcall("demetra/tramoseats/r/TramoSeats", "[B", "toBuffer", jq)
+  p<-RProtoBuf::read(tramoseats.TramoSeatsOutput, q)
+  return (structure(list(
+    result=p2r_tramoseats_rslts(p$result),
+    estimation_spec=p2r_spec_tramoseats(p$estimation_spec),
+    result_spec=p2r_spec_tramoseats(p$result_spec)
+  ),
+  class="JD3TRAMOSEATS_OUTPUT")
+  )
+
 }
 
 

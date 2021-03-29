@@ -9,16 +9,14 @@ option java_package = "demetra.tramoseats.io.protobuf";
 option java_outer_classname = "TramoSeatsProtos";
 
 enum SeatsApproximation {
-	SEATS_APP_UNSPECIFIED = 0;
-	SEATS_APP_NONE = 1;
-	SEATS_APP_LEGACY=2;
-	SEATS_APP_NOISY=3;
+	SEATS_APP_NONE = 0;
+	SEATS_APP_LEGACY=1;
+	SEATS_APP_NOISY=2;
 }
 	
 enum SeatsAlgorithm{
-	SEATS_ALG_UNSPECIFIED = 0;
-	SEATS_ALG_BURMAN = 1;
-	SEATS_ALG_KALMANSMOOTHER = 2;
+	SEATS_ALG_BURMAN = 0;
+	SEATS_ALG_KALMANSMOOTHER = 1;
 }
 
 message DecompositionSpec {
@@ -36,25 +34,22 @@ message DecompositionSpec {
 }
 
 enum AutomaticTradingDays {
-	TD_AUTO_UNSPECIFIED = 0;
-	TD_AUTO_NO = 1;
-	TD_AUTO_FTEST = 2;
-	TD_AUTO_WALDTEST = 3;
+	TD_AUTO_NO = 0;
+	TD_AUTO_FTEST = 1;
+	TD_AUTO_WALDTEST = 2;
 }
 		
 enum TradingDaysTest {
-	TD_TEST_UNSPECIFIED = 0;
-	TD_TEST_NO = 1;
-	TD_TEST_SEPARATE_T = 2;
-	TD_TEST_JOINT_F = 3;
+	TD_TEST_NO = 0;
+	TD_TEST_SEPARATE_T = 1;
+	TD_TEST_JOINT_F = 2;
 }
 
 enum EasterType {
-	EASTER_UNSPECIFIED = 0;
-	EASTER_UNUSED = 1;
-	EASTER_STANDARD = 2;
-	EASTER_INCLUDEEASTER = 3;
-	EASTER_INCLUDEEASTERMONDAY = 4;
+	EASTER_UNUSED = 0;
+	EASTER_STANDARD = 1;
+	EASTER_INCLUDEEASTER = 2;
+	EASTER_INCLUDEEASTERMONDAY = 3;
 }
 
 message TramoSpec {
@@ -112,12 +107,12 @@ message TramoSpec {
 		TradingDaysTest test = 6;
 		AutomaticTradingDays auto = 7;
 		double ptest = 8;
-		repeated jd3.Parameter tdcoefficient = 10;
+		repeated jd3.Parameter tdcoefficients = 10;
 		jd3.Parameter lpcoefficient = 11;
 	}
 	
 	message RegressionSpec{
-		jd3.NullableParameter mean = 1;
+		regarima.TrendConstant mean = 1;
 		TradingDaysSpec td = 2;
 		EasterSpec easter = 3;
 		repeated regarima.Outlier outliers = 4;
