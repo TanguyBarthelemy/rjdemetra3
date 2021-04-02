@@ -118,6 +118,7 @@ tramoseats<-function(ts, spec="rsafull", context=NULL){
 #' @param spec
 #' @param refspec
 #' @param policy
+#' @param period
 #' @param start
 #' @param end
 #'
@@ -125,8 +126,18 @@ tramoseats<-function(ts, spec="rsafull", context=NULL){
 #' @export
 #'
 #' @examples
-tramo.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
+tramo.refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers", "FixedParameters", "FixedAutoRegressiveParameters", "Fixed"), period=0, start=NULL, end=NULL){
+  policy=match.arg(policy)
+  jspec<-r2jd_spec_tramo(spec)
+  if (is.null(refspec)){
+    jrefspec<-.jcall("demetra/tramo/TramoSpec", "Ldemetra/tramo/TramoSpec;", "fromString", "trfull")
 
+  }else{
+    jrefspec<-r2jd_spec_tramo(refspec)
+  }
+  jdom<-jdomain(period, start, end)
+  jnspec<-.jcall("demetra/tramoseats/r/Tramo", "Ldemetra/tramo/TramoSpec;", "refreshSpec", jspec, jrefspec, jdom, policy)
+  return (jd2r_spec_tramo(jnspec))
 }
 
 #' Title
@@ -134,6 +145,7 @@ tramo.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
 #' @param spec
 #' @param refspec
 #' @param policy
+#' @param period
 #' @param start
 #' @param end
 #'
@@ -141,7 +153,18 @@ tramo.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
 #' @export
 #'
 #' @examples
-tramoseats.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
+tramoseats.refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers", "FixedParameters", "FixedAutoRegressiveParameters", "Fixed", "Current"), period=0, start=NULL, end=NULL){
+  policy=match.arg(policy)
+  jspec<-r2jd_spec_tramoseats(spec)
+  if (is.null(refspec)){
+    jrefspec<-.jcall("demetra/tramoseats/TramoSeatsSpec", "Ldemetra/tramoseats/TramoSeatsSpec;", "fromString", "rsafull")
+
+  }else{
+    jrefspec<-r2jd_spec_tramoseats(refspec)
+  }
+  jdom<-jdomain(period, start, end)
+  jnspec<-.jcall("demetra/tramoseats/r/TramoSeats", "Ldemetra/tramoseats/TramoSeatsSpec;", "refreshSpec", jspec, jrefspec, jdom, policy)
+  return (jd2r_spec_tramoseats(jnspec))
 
 }
 

@@ -139,7 +139,7 @@ message RegArimaSpec {
 	}
 
 	message RegressionSpec{
-		regarima.TrendConstant mean = 1;
+		jd3.Parameter mean = 1;
 		TradingDaysSpec td = 2;
 		EasterSpec easter = 3;
 		repeated regarima.Outlier outliers = 4;

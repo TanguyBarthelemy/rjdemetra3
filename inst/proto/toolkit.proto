@@ -6,14 +6,14 @@ option java_package = "demetra.toolkit.io.protobuf";
 option java_outer_classname = "ToolkitProtos";
 
 enum SelectionType {
-    SPAN_NONE=0;
-	SPAN_ALL=1;
-	SPAN_FROM=2;
-	SPAN_TO=3;
-	SPAN_BETWEEN=4;
-	SPAN_LAST=5;
-	SPAN_FIRST=6;
-	SPAN_EXCLUDING=7;
+	SPAN_ALL=0;
+	SPAN_FROM=1;
+	SPAN_TO=2;
+	SPAN_BETWEEN=3;
+	SPAN_LAST=4;
+	SPAN_FIRST=5;
+	SPAN_EXCLUDING=6;
+    SPAN_NONE=7;
 }
 
 message Date {
@@ -41,10 +41,13 @@ message TimeSelector{
 }
 
 enum ParameterType{
-	PARAMETER_UNDEFINED = 0;
-	PARAMETER_FIXED = 1;
-	PARAMETER_INITIAL = 2;
-	PARAMETER_ESTIMATED = 3;
+	// Similar to null
+	PARAMETER_UNUSED = 0;
+	// Parameter is used but not defined (to be estimated)
+	PARAMETER_UNDEFINED = 1;
+	PARAMETER_FIXED = 2;
+	PARAMETER_INITIAL = 3;
+	PARAMETER_ESTIMATED = 4;
 }
 
 message Parameter{

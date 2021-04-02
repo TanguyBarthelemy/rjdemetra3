@@ -103,25 +103,6 @@ p2r_parameter<-function(p){
   return (list(value = p$value, type=enum_extract(jd3.ParameterType, p$type)))
 }
 
-p2r_const<-function(p){
-  if (p$used){
-    return (p2r_parameter(p$coefficient))
-  }else{
-    return (NULL)
-  }
-}
-
-r2p_const<-function(r){
-  p<-regarima.TrendConstant$new()
-  if (is.null(r)){
-    p$used=F
-  }else{
-    p$used=T
-    p$coefficient=r2p_parameter(r)
-  }
-  return (p)
-}
-
 r2p_parameters<-function(r){
 
   n<-length(r)
@@ -177,7 +158,7 @@ r2p_outlier<-function(r){
   p$name=r$name
   p$code<-r$code
   p$position<-r2p_date(r$pos)
-  p$coefficient<-r2p_parameter(r$coefficient)
+  p$coefficient<-r2p_parameter(r$coef)
   return (p)
 }
 
@@ -328,6 +309,14 @@ r2p_spec_benchmarking<-function(r){
   p$bias<-enum_of(sa.BenchmarkingBias, r$bias, "BENCH")
   p$forecast<-r$forecast
   return (p)
+}
+
+jdomain<-function(period, start, end){
+  if (period == 0)return (.jnull("demetra/timeseries/TsDomain"))
+  n<-period*(end[1]-start[1])+end[2]-start[2]
+  jdom<-.jcall("demetra/timeseries/r/TsUtility", "Ldemetra/timeseries/TsDomain;", "of"
+         , as.integer(period), as.integer(start[1]), as.integer(start[2]), as.integer(n))
+  return (jdom)
 }
 
 

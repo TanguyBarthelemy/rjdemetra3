@@ -4,7 +4,15 @@
 \alias{x13.refresh}
 \title{Title}
 \usage{
-x13.refresh(spec, refspec, policy, start = NULL, end = NULL)
+x13.refresh(
+  spec,
+  refspec = NULL,
+  policy = c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers",
+    "FixedParameters", "FixedAutoRegressiveParameters", "Fixed", "Current"),
+  period = 0,
+  start = NULL,
+  end = NULL
+)
 }
 \arguments{
 \item{end}{}

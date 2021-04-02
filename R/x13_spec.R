@@ -139,7 +139,7 @@ p2r_spec_regarima<-function(pspec){
 
   # TODO: complete regression
   regression<-list(
-    mean=p2r_const(pspec$regression$mean),
+    mean=p2r_parameter(pspec$regression$mean),
     td=td,
     easter=easter,
     outliers=p2r_outliers(pspec$regression$outliers),
@@ -207,7 +207,7 @@ r2p_spec_regarima<-function(r){
 
   #REGRESSION
 
-  p$regression$mean=r2p_const(r$regression$mean)
+  p$regression$mean=r2p_parameter(r$regression$mean)
   p$regression$outliers=r2p_outliers(r$regression$outliers)
   p$regression$ramps=r2p_ramps(r$regression$ramps)
 

@@ -168,6 +168,7 @@ x11<-function(ts, spec){
 #' @param spec
 #' @param refspec
 #' @param policy
+#' @param period
 #' @param start
 #' @param end
 #'
@@ -175,8 +176,18 @@ x11<-function(ts, spec){
 #' @export
 #'
 #' @examples
-regarima.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
+regarima.refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers", "FixedParameters", "FixedAutoRegressiveParameters", "Fixed"), period=0, start=NULL, end=NULL){
+  policy=match.arg(policy)
+  jspec<-r2jd_spec_regarima(spec)
+  if (is.null(refspec)){
+    jrefspec<-.jcall("demetra/regarima/RegArimaSpec", "Ldemetra/regarima/RegArimaSpec;", "fromString", "rg4")
 
+  }else{
+    jrefspec<-r2jd_spec_regarima(refspec)
+  }
+  jdom<-jdomain(period, start, end)
+  jnspec<-.jcall("demetra/x13/r/RegArima", "Ldemetra/regarima/RegArimaSpec;", "refreshSpec", jspec, jrefspec, jdom, policy)
+  return (jd2r_spec_regarima(jnspec))
 }
 
 #' Title
@@ -184,6 +195,7 @@ regarima.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
 #' @param spec
 #' @param refspec
 #' @param policy
+#' @param period
 #' @param start
 #' @param end
 #'
@@ -191,7 +203,18 @@ regarima.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
 #' @export
 #'
 #' @examples
-x13.refresh<-function(spec, refspec, policy, start=NULL, end=NULL){
+x13.refresh<-function(spec, refspec=NULL, policy=c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers", "FixedParameters", "FixedAutoRegressiveParameters", "Fixed", "Current"), period=0, start=NULL, end=NULL){
+  policy=match.arg(policy)
+  jspec<-r2jd_spec_x13(spec)
+  if (is.null(refspec)){
+    jrefspec<-.jcall("demetra/x13/X13Spec", "Ldemetra/x13/X13Spec;", "fromString", "rsa4")
+
+  }else{
+    jrefspec<-r2jd_spec_x13(refspec)
+  }
+  jdom<-jdomain(period, start, end)
+  jnspec<-.jcall("demetra/x13/r/X13", "Ldemetra/x13/X13Spec;", "refreshSpec", jspec, jrefspec, jdom, policy)
+  return (jd2r_spec_x13(jnspec))
 
 }
 

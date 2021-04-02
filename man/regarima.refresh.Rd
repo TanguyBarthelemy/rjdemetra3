@@ -4,7 +4,15 @@
 \alias{regarima.refresh}
 \title{Title}
 \usage{
-regarima.refresh(spec, refspec, policy, start = NULL, end = NULL)
+regarima.refresh(
+  spec,
+  refspec = NULL,
+  policy = c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers",
+    "FixedParameters", "FixedAutoRegressiveParameters", "Fixed"),
+  period = 0,
+  start = NULL,
+  end = NULL
+)
 }
 \arguments{
 \item{end}{}

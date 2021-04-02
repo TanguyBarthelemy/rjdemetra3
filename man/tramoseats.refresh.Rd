@@ -4,7 +4,15 @@
 \alias{tramoseats.refresh}
 \title{Title}
 \usage{
-tramoseats.refresh(spec, refspec, policy, start = NULL, end = NULL)
+tramoseats.refresh(
+  spec,
+  refspec = NULL,
+  policy = c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers",
+    "FixedParameters", "FixedAutoRegressiveParameters", "Fixed", "Current"),
+  period = 0,
+  start = NULL,
+  end = NULL
+)
 }
 \arguments{
 \item{end}{}

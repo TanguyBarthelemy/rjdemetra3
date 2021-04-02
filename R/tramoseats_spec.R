@@ -76,12 +76,13 @@ p2r_spec_tramo<-function(pspec){
   pee<-pspec$regression$easter
   td<-list(td=enum_extract(regarima.TradingDays, ptd$td), lp=enum_extract(regarima.LengthOfPeriod, ptd$lp),
            holidays=ptd$holidays, users=unlist(ptd$users), w=ptd$w,
-           test=enum_extract(tramoseats.TradingDaysTest, ptd$test), auto=enum_extract(tramoseats.AutomaticTradingDays, ptd$auto),
+           test=enum_extract(tramoseats.TradingDaysTest, ptd$test),
+           auto=enum_extract(tramoseats.AutomaticTradingDays, ptd$auto),ptest=ptd$ptest,
            tdcoefficients=p2r_parameters(ptd$tdcoefficients), lpcoefficient=p2r_parameter(ptd$lpcoefficient))
   easter<-list(type=enum_extract(tramoseats.EasterType, pee$type), duration=pee$duration, julian=pee$julian, test=pee$test, coefficient=p2r_parameter(pee$coefficient))
   # TODO: complete regression
   regression<-list(
-    mean=p2r_const(r$mean),
+    mean=p2r_parameter(r$mean),
     td=td,
     easter=easter,
     outliers=p2r_outliers(r$outliers),
@@ -135,7 +136,7 @@ r2p_spec_tramo<-function(rspec){
 
   #REGRESSION
 
-  pspec$regression$mean=r2p_const(rspec$regression$mean)
+  pspec$regression$mean=r2p_parameter(rspec$regression$mean)
   pspec$regression$outliers=r2p_outliers(rspec$regression$outliers)
   pspec$regression$ramps=r2p_ramps(rspec$regression$ramps)
 

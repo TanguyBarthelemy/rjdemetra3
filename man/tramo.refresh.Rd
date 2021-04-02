@@ -4,7 +4,15 @@
 \alias{tramo.refresh}
 \title{Title}
 \usage{
-tramo.refresh(spec, refspec, policy, start = NULL, end = NULL)
+tramo.refresh(
+  spec,
+  refspec = NULL,
+  policy = c("FreeParameters", "Complete", "Outliers_StochasticComponent", "Outliers",
+    "FixedParameters", "FixedAutoRegressiveParameters", "Fixed"),
+  period = 0,
+  start = NULL,
+  end = NULL
+)
 }
 \arguments{
 \item{end}{}
