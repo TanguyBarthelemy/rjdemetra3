@@ -17,9 +17,10 @@ Description: Interface around 'JDemetra+ 3.x' (<https://github.com/jdemetra/jdem
     It offers full access to all options and outputs of 'JDemetra+', including the two leading seasonal adjustment methods
     TRAMO/SEATS+ and X-12ARIMA/X-13ARIMA-SEATS.
 Depends:
-    R (>= 3.1.1),
-    rjd3sa (>= 0.0.1)
+    R (>= 3.1.1)
 Imports:
+    rjd3tramoseats (>= 0.0.1),
+    rjd3x13 (>= 0.0.1)
 SystemRequirements: Java SE 8 or higher
 License: EUPL
 URL: https://github.com/jdemetra/rjdemetra3
@@ -31,15 +32,4 @@ RoxygenNote: 7.1.1
 BugReports: https://github.com/jdemetra/rjdemetra3/issues
 Encoding: UTF-8
 Collate: 
-    'common_spec.R'
-    'utils.R'
-    'display.R'
-    'jd3_ts.R'
-    'regarima_rslts.R'
-    'tramoseats_spec.R'
-    'tramoseats.R'
-    'tramoseats_rslts.R'
-    'x13.R'
-    'x13_rslts.R'
-    'x13_spec.R'
     'zzz.R'
