@@ -1,7 +1,7 @@
 Package: RJDemetra3
 Type: Package
 Title: Interface to 'JDemetra+ 3.0' Seasonal Adjustment Software
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: c(
   person("Alain", "Quartier-la-Tente", role = c("aut", "cre"),
                  email = "alain.quartier@yahoo.fr",
@@ -17,10 +17,10 @@ Description: Interface around 'JDemetra+ 3.x' (<https://github.com/jdemetra/jdem
     It offers full access to all options and outputs of 'JDemetra+', including the two leading seasonal adjustment methods
     TRAMO/SEATS+ and X-12ARIMA/X-13ARIMA-SEATS.
 Depends:
-    R (>= 3.1.1)
-Imports:
+    R (>= 3.1.1),
     rjd3tramoseats (>= 0.0.1),
     rjd3x13 (>= 0.0.1)
+Imports:
 SystemRequirements: Java SE 8 or higher
 License: EUPL
 URL: https://github.com/jdemetra/rjdemetra3
