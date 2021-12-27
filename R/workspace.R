@@ -23,3 +23,54 @@ jws.new<-function(){
   return (jws)
 }
 
+#' Title
+#'
+#' @param jws
+#'
+#' @return
+#' @export
+#'
+#' @examples
+jws.multiprocessing.count<-function(jws){
+  return (.jcall(jws, "I", "getMultiProcessingCount"))
+}
+
+
+
+#' Title
+#'
+#' @param jws
+#' @param idx
+#'
+#' @return
+#' @export
+#'
+#' @examples
+jws.multiprocessing<-function(jws, idx){
+  return (.jcall(jws, "Ldemetra/workspace/r/MultiProcessing;", "getMultiProcessing", as.integer(idx-1)))
+}
+
+#' Title
+#'
+#' @param jws
+#' @param name
+#'
+#' @return
+#' @export
+#'
+#' @examples
+jws.multiprocessing.new<-function(jws, name){
+  return (.jcall(jws, "Ldemetra/workspace/r/MultiProcessing;", "newMultiProcessing", name))
+}
+
+#' Title
+#'
+#' @param jws
+#'
+#' @return
+#' @export
+#'
+#' @examples
+jws.compute<-function(jws){
+  .jcall(jws, "V", "computeAll")
+}
