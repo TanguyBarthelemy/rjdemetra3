@@ -1,3 +1,7 @@
+#' @include multiprocessing.R
+NULL
+
+
 #' Title
 #'
 #' @param file
@@ -74,3 +78,24 @@ jws.multiprocessing.new<-function(jws, name){
 jws.compute<-function(jws){
   .jcall(jws, "V", "computeAll")
 }
+
+#' Title
+#'
+#' @param name
+#'
+#' @return
+#' @export
+#'
+#' @examples
+jws.load<-function(name){
+  jws<-jws.open(name)
+  jws.compute(jws)
+  n<-jws.multiprocessing.count(jws)
+  jmps<-lapply(1:n, function(i){jmp.load(jws.multiprocessing(jws,i))})
+  names<-lapply(1:n, function(i){jmp.name(jws.multiprocessing(jws, i))})
+  names(jmps)<-names
+  return (jmps)
+
+}
+
+
