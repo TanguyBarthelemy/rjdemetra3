@@ -40,7 +40,7 @@ jsa.read<-function(jsa){
 
   return (list(
     ts=rts,
-    spec=jspec,
+    spec=spec,
     results=rslt
   ))
 }
