@@ -23,24 +23,20 @@ jsa.read<-function(jsa){
 
   jspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "activeSpecification")
   if (.jinstanceof(jspec, "demetra/tramoseats/TramoSeatsSpec")){
-    spec<-rjd3tramoseats:::jd2r_spec_tramoseats(.jcast(jspec, "demetra/tramoseats/TramoSeatsSpec"))
+    spec<-rjd3tramoseats::jd2r_spec_tramoseats(.jcast(jspec, "demetra/tramoseats/TramoSeatsSpec"))
     if (! is.jnull(jrslt)){
-      rslt<-rjd3tramoseats:::tramoseats_rslts(.jcast(jrslt, "jdplus/tramoseats/TramoSeatsResults"))
-    }else{
-      rslt <- NULL
+      rslt<-rjd3tramoseats::tramoseats_rslts(.jcast(jrslt, "jdplus/tramoseats/TramoSeatsResults"))
     }
   }else if (.jinstanceof(jspec, "demetra/x13/X13Spec")){
-    spec<-rjd3x13:::jd2r_spec_x13(.jcast(jspec, "demetra/x13/X13Spec"))
+    spec<-rjd3x13::jd2r_spec_x13(.jcast(jspec, "demetra/x13/X13Spec"))
     if (! is.jnull(jrslt)){
-      rslt<-rjd3x13:::x13_rslts(.jcast(jrslt, "jdplus/x13/X13Results"))
-    }else{
-      rslt <- NULL
+      rslt<-rjd3x13::x13_rslts(.jcast(jrslt, "jdplus/x13/X13Results"))
     }
   }
 
   return (list(
     ts=rts,
-    spec=spec,
+    spec=jspec,
     results=rslt
   ))
 }
