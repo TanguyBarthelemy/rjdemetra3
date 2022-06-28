@@ -21,24 +21,34 @@ jsa.read<-function(jsa){
   jts<-.jcall(jdef, "Ldemetra/timeseries/Ts;", "getTs")
   rts<-rjd3toolkit::ts_jd2r(.jcall(jts, "Ldemetra/timeseries/TsData;", "getData"))
 
+  jdspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "getDomainSpec")
   jspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "activeSpecification")
   if (.jinstanceof(jspec, "demetra/tramoseats/TramoSeatsSpec")){
     spec<-rjd3tramoseats::jd2r_spec_tramoseats(.jcast(jspec, "demetra/tramoseats/TramoSeatsSpec"))
+    dspec<-rjd3tramoseats::jd2r_spec_tramoseats(.jcast(jdspec, "demetra/tramoseats/TramoSeatsSpec"))
     if (! is.jnull(jrslt)){
       rslt<-rjd3tramoseats:::tramoseats_rslts(.jcast(jrslt, "jdplus/tramoseats/TramoSeatsResults"))
+      jpspec<-.jcall(jestimation, "Ldemetra/sa/SaSpecification;", "getPointSpec")
+      pspec<-rjd3tramoseats::jd2r_spec_tramoseats(.jcast(jpspec, "demetra/tramoseats/TramoSeatsSpec"))
     }
   }else if (.jinstanceof(jspec, "demetra/x13/X13Spec")){
     spec<-rjd3x13::jd2r_spec_x13(.jcast(jspec, "demetra/x13/X13Spec"))
+    dspec<-rjd3x13::jd2r_spec_x13(.jcast(jdspec, "demetra/x13/X13Spec"))
     if (! is.jnull(jrslt)){
       rslt<-rjd3x13:::x13_rslts(.jcast(jrslt, "jdplus/x13/X13Results"))
+      jpspec<-.jcall(jestimation, "Ldemetra/sa/SaSpecification;", "getPointSpec")
+      pspec<-rjd3x13::jd2r_spec_x13(.jcast(jpspec, "demetra/x13/X13Spec"))
     }
   }else{
     rslt<-NULL
+    pspec<-NULL
   }
 
   return (list(
     ts=rts,
-    spec=jspec,
+    domainSpec=dspec,
+    estimationSpec=spec,
+    pointSpec=pspec,
     results=rslt
   ))
 }

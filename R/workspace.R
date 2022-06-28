@@ -99,3 +99,16 @@ jws.load<-function(name){
 }
 
 
+#' Title
+#'
+#' @param jws
+#'
+#' @return
+#' @export
+#'
+#' @examples
+jws.context<-function(jws){
+  .jcall(jws, "Ldemetra/timeseries/regression/ModellingContext;", "getContext")
+}
+
+
