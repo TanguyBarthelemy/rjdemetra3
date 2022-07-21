@@ -2,16 +2,13 @@
 % Please edit documentation in R/workspace.R
 \name{jws.context}
 \alias{jws.context}
-\title{Title}
+\title{Get Context from Workspace}
 \usage{
 jws.context(jws)
 }
 \arguments{
-\item{jws}{}
-}
-\value{
-
+\item{jws}{the workspace.}
 }
 \description{
-Title
+Get Context from Workspace
 }

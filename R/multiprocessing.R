@@ -1,53 +1,33 @@
 #' @include saitem.R
 NULL
 
-
-#' Title
-#'
-#' @param jmp
-#'
-#' @return
+#' @rdname count
 #' @export
-#'
-#' @examples
 jmp.sa.count<-function(jmp){
   return (.jcall(jmp, "I", "size"))
 }
 
-#' Title
+#' Get the name of a multiprocessing or a SaItem
 #'
-#' @param jmp
+#' Functions to retrieve the name of a multiprocessing (`jmp.name()`) or SaItem (`jsa.name()`).
 #'
-#' @return
+#' @param jmp,jsa the object to retrieve the name from.
+#'
 #' @export
-#'
-#' @examples
 jmp.name<-function(jmp){
   return (.jcall(jmp, "S", "getName"))
 }
 
 
-#' Title
-#'
-#' @param jmp
-#' @param idx
-#'
-#' @return
+#' @name jws.multiprocessing
 #' @export
-#'
-#' @examples
 jmp.sa<-function(jmp, idx){
   return (.jcall(jmp, "Ldemetra/sa/SaItem;", "get", as.integer(idx-1)))
 }
 
-#' Title
-#'
-#' @param jmp
-#'
-#' @return
+
+#' @name jws.load
 #' @export
-#'
-#' @examples
 jmp.load<-function(jmp){
   n<-.jcall(jmp, "I", "size")
   all<-lapply(1:n, function(i){jsa.read(jmp.sa(jmp, i))})

@@ -2,13 +2,26 @@
 % Please edit documentation in R/workspace.R
 \name{jws.new}
 \alias{jws.new}
-\title{Title}
+\alias{jws.multiprocessing.new}
+\title{Create a workspace or a multi-processing}
 \usage{
 jws.new()
-}
-\value{
 
+jws.multiprocessing.new(jws, name)
+}
+\arguments{
+\item{jws}{a workspace object.}
+
+\item{name}{character name of the new multiprocessing.}
 }
 \description{
-Title
+Functions to create a 'JDemetra+' workspace (\code{jws.new()}) and
+to add a new multi-processing (\code{jws.multiprocessing.new()}).
+}
+\examples{
+# To create and export an empty 'JDemetra+' workspace
+wk <- jws.new()
+mp <- jws.multiprocessing.new(wk, "sa1")
+
+
 }
