@@ -111,7 +111,7 @@ jws.context<-function(jws){
 #' Read all SaItems
 #'
 #' Functions to read all the SAItem ([jsa.read()]) of a multiprocessing (`jmp.load()`)
-#' or a workspace (`jws.load`).
+#' or a workspace (`jws.load()`).
 #'
 #' @inheritParams jws.open
 #' @param jmp a multiprocessing.

@@ -17,5 +17,5 @@ By default a dialog box opens.}
 }
 \description{
 Functions to read all the SAItem (\code{\link[=jsa.read]{jsa.read()}}) of a multiprocessing (\code{jmp.load()})
-or a workspace (\code{jws.load}).
+or a workspace (\code{jws.load()}).
 }
