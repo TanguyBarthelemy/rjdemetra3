@@ -24,16 +24,17 @@ Imports:
     rjd3modelling (>= 0.3.2),
     rjd3sa (>= 0.3.2),
     rjd3tramoseats (>= 0.3.2),
-    rjd3x13 (>= 0.3.2)
-SystemRequirements: Java SE 8 or higher
+    rjd3x13 (>= 0.3.2),
+    RProtoBuf
+SystemRequirements: Java JRE 17 or higher
 License: EUPL
-URL: https://github.com/jdemetra/rjdemetra3
+URL: https://github.com/palatej/rjdemetra3
 LazyData: TRUE
 Suggests:
     knitr,
     rmarkdown
-RoxygenNote: 7.1.2
-BugReports: https://github.com/jdemetra/rjdemetra3/issues
+Roxygen: list(markdown = TRUE)
+BugReports: https://github.com/palatej/rjdemetra3/issues
 Encoding: UTF-8
 Collate: 
     'utils.R'
@@ -42,3 +43,4 @@ Collate:
     'multiprocessing.R'
     'workspace.R'
     'zzz.R'
+RoxygenNote: 7.2.0
