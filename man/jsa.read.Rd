@@ -2,16 +2,30 @@
 % Please edit documentation in R/saitem.R
 \name{jsa.read}
 \alias{jsa.read}
-\title{Title}
+\alias{jsa.results}
+\title{Read SAItem}
 \usage{
 jsa.read(jsa)
+
+jsa.results(jsa, items = NULL)
 }
 \arguments{
-\item{jsa}{}
-}
-\value{
+\item{jsa}{Java SAItem object.}
 
+\item{items}{vector of characters containing the variables to extract.
+See [rjd3x13::userdefined_variables_x13()] or [rjd3tramoseats::userdefined_variables_tramoseats()]. By default, extracts all the possible variables.}
 }
 \description{
-Title
+`jsa.results()` extracts specific variables of the model of the SAItem while
+`jsa.read()` extracts all the informations of a SAItem (see details).
+}
+\details{
+A SAItem contains more information than just the results of a model.
+All those informations are extracted with the `jsa.read()` function that returns a list with 5 objects:
+
+- `ts`: the raw time series.
+- `domainSpec`: initial specification. Reference for any relaxing of some elements of the specification.
+- `estimationSpec`: specification used for the current estimation.
+- `pointSpec`: specification corresponding to the results of the current estimation (fully identified model).
+- `results`: the result of the model.
 }
