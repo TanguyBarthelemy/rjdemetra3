@@ -137,6 +137,10 @@ jws.load<-function(file){
   jmps<-lapply(1:n, function(i){jmp.load(jws.multiprocessing(jws,i))})
   names<-lapply(1:n, function(i){jmp.name(jws.multiprocessing(jws, i))})
   names(jmps)<-names
-  return (jmps)
+  jcntxt<-jws.context(jws)
+  b<-.jcall("demetra/util/r/Modelling", "[B", "toBuffer", jcntxt)
+  cntxt<-rjd3modelling::.p2r_modellingcontext(RProtoBuf::read(jd3.ModellingContext, b))
+
+  return (list(processing=jmps, context=cntxt))
 
 }
