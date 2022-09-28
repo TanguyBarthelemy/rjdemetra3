@@ -3,7 +3,7 @@ NULL
 
 #' @rdname count
 #' @export
-jmp.sa.count<-function(jmp){
+.jmp.sa.count<-function(jmp){
   return (.jcall(jmp, "I", "size"))
 }
 
@@ -14,24 +14,24 @@ jmp.sa.count<-function(jmp){
 #' @param jmp,jsa the object to retrieve the name from.
 #'
 #' @export
-jmp.name<-function(jmp){
+.jmp.name<-function(jmp){
   return (.jcall(jmp, "S", "getName"))
 }
 
 
 #' @name jws.multiprocessing
 #' @export
-jmp.sa<-function(jmp, idx){
+.jmp.sa<-function(jmp, idx){
   return (.jcall(jmp, "Ldemetra/sa/SaItem;", "get", as.integer(idx-1)))
 }
 
 
 #' @name jws.load
 #' @export
-jmp.load<-function(jmp){
+.jmp.load<-function(jmp){
   n<-.jcall(jmp, "I", "size")
-  all<-lapply(1:n, function(i){jsa.read(jmp.sa(jmp, i))})
-  names<-lapply(1:n, function(i){jsa.name(jmp.sa(jmp, i))})
+  all<-lapply(1:n, function(i){.jsa.read(.jmp.sa(jmp, i))})
+  names<-lapply(1:n, function(i){.jsa.name(.jmp.sa(jmp, i))})
   names(all)<-names
   return (all)
 }

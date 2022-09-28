@@ -19,7 +19,7 @@ NULL
 #' - `pointSpec`: specification corresponding to the results of the current estimation (fully identified model).
 #' - `results`: the result of the model.
 #' @export
-jsa.read<-function(jsa){
+.jsa.read<-function(jsa){
   jdef<-.jcall(jsa, "Ldemetra/sa/SaDefinition;", "getDefinition")
 
   jestimation<-.jcall(jsa, "Ldemetra/sa/SaEstimation;", "getEstimation")
@@ -65,7 +65,7 @@ jsa.read<-function(jsa){
 
 #' @rdname jsa.read
 #' @export
-jsa.results<-function(jsa, items = NULL){
+.jsa.results<-function(jsa, items = NULL){
   jestimation<-.jcall(jsa, "Ldemetra/sa/SaEstimation;", "getEstimation")
   if (is.jnull(jestimation))
     return (NULL)
@@ -80,7 +80,7 @@ jsa.results<-function(jsa, items = NULL){
 
 #' @rdname jmp.name
 #' @export
-jsa.name<-function(jsa){
+.jsa.name<-function(jsa){
   return (.jcall(jsa, "S", "getName"))
 }
 
