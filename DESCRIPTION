@@ -1,7 +1,7 @@
 Package: RJDemetra3
 Type: Package
 Title: Interface to 'JDemetra+ 3.0' Seasonal Adjustment Software
-Version: 0.4.2
+Version: 0.5.0
 Authors@R: c(
   person("Alain", "Quartier-la-Tente", role = c("aut", "cre"),
                  email = "alain.quartier@yahoo.fr",
@@ -21,12 +21,12 @@ Depends:
 Imports:
     rJava (>= 1.0-6),
   	RProtoBuf (>= 0.4.17),
-    rjd3toolkit (>= 0.4.2),
-    rjd3modelling (>= 0.4.2),
+    rjd3toolkit (>= 0.5.0),
+    rjd3modelling (>= 0.5.0),
     rjd3arima (>= 0.4.2),
-    rjd3sa (>= 0.4.2),
-    rjd3tramoseats (>= 0.4.2),
-    rjd3x13 (>= 0.4.2)
+    rjd3sa (>= 0.5.0),
+    rjd3tramoseats (>= 0.5.0),
+    rjd3x13 (>= 0.5.0)
 SystemRequirements: Java SE 8 or higher
 License: EUPL
 URL: https://github.com/jdemetra/rjdemetra3
@@ -39,7 +39,6 @@ BugReports: https://github.com/jdemetra/rjdemetra3/issues
 Encoding: UTF-8
 Collate: 
     'utils.R'
-    'context.R'
     'saitem.R'
     'multiprocessing.R'
     'workspace.R'

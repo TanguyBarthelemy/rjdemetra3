@@ -6,7 +6,7 @@
 \alias{.jws.multiprocessing.new}
 \title{Create a workspace or a multi-processing}
 \usage{
-.jws.new()
+.jws.new(modelling_context = NULL)
 
 .jws.multiprocessing.new(jws, name)
 }
