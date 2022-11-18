@@ -1,4 +1,4 @@
-Package: RJDemetra3
+Package: rjdemetra3
 Type: Package
 Title: Interface to 'JDemetra+ 3.0' Seasonal Adjustment Software
 Version: 0.5.1
