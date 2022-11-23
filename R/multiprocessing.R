@@ -22,6 +22,7 @@ NULL
 #' @name jws.multiprocessing
 #' @export
 .jmp.sa<-function(jmp, idx){
+  if (idx < 1) return (NULL)
   return (.jcall(jmp, "Ldemetra/sa/SaItem;", "get", as.integer(idx-1)))
 }
 
@@ -30,6 +31,7 @@ NULL
 #' @export
 .jmp.load<-function(jmp){
   n<-.jcall(jmp, "I", "size")
+  if (n == 0){ return (NULL)}
   all<-lapply(1:n, function(i){.jsa.read(.jmp.sa(jmp, i))})
   names<-lapply(1:n, function(i){.jsa.name(.jmp.sa(jmp, i))})
   names(all)<-names
