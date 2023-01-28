@@ -21,7 +21,7 @@ NULL
 .jws.new<-function(modelling_context=NULL){
     jws<-.jnew("demetra/workspace/r/Ws")
   if (! is.null(modelling_context)){
-    jcontext<-rjd3modelling::.r2jd_modellingcontext(modelling_context)
+    jcontext<-rjd3toolkit::.r2jd_modellingcontext(modelling_context)
     .jcall("demetra/workspace/r/Ws", "V", "setContext", jcontext)
   }
   return (jws)
@@ -139,7 +139,7 @@ load_workspace<-function(file){
   names<-lapply(1:n, function(i){.jmp.name(.jws.multiprocessing(jws, i))})
   names(jmps)<-names
   jcntxt<-.jws.context(jws)
-  cntxt<-rjd3modelling::.jd2r_modellingcontext(jcntxt)
+  cntxt<-rjd3toolkit::.jd2r_modellingcontext(jcntxt)
 
   return (list(processing=jmps, context=cntxt))
 
