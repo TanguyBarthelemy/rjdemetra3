@@ -20,7 +20,6 @@ Depends:
     R (>= 3.6.0)
 Imports:
     rJava (>= 1.0-6),
-  	RProtoBuf (>= 0.4.17),
     rjd3toolkit (>= 0.7.0),
     rjd3tramoseats (>= 0.5.1),
     rjd3x13 (>= 0.5.1)
@@ -31,7 +30,7 @@ LazyData: TRUE
 Suggests:
     knitr,
     rmarkdown,
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 BugReports: https://github.com/jdemetra/rjdemetra3/issues
 Encoding: UTF-8
 Collate: 
