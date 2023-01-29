@@ -29,7 +29,7 @@ NULL
   }
   # ts
   jts<-.jcall(jdef, "Ldemetra/timeseries/Ts;", "getTs")
-  rts<-rjd3toolkit::ts_jd2r(.jcall(jts, "Ldemetra/timeseries/TsData;", "getData"))
+  rts<-rjd3toolkit::.jd2r_ts(.jcall(jts, "Ldemetra/timeseries/TsData;", "getData"))
 
   jdspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "getDomainSpec")
   jspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "activeSpecification")
@@ -71,8 +71,8 @@ NULL
     return (NULL)
   jrslt<-.jcall(jestimation, "Ldemetra/information/Explorable;", "getResults")
   if (is.null(items))
-    items<-rjd3toolkit::proc_dictionary2(jrslt)
-  r<-lapply(items, function(t){rjd3toolkit::proc_data(jrslt, t)})
+    items<-rjd3toolkit::.proc_dictionary2(jrslt)
+  r<-lapply(items, function(t){rjd3toolkit::.proc_data(jrslt, t)})
   names(r)<-items
   return (r)
 }
