@@ -34,12 +34,12 @@ NULL
   jdspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "getDomainSpec")
   jspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "activeSpecification")
   if (.jinstanceof(jspec, "demetra/tramoseats/TramoSeatsSpec")){
-    spec<-rjd3tramoseats::jd2r_spec_tramoseats(.jcast(jspec, "demetra/tramoseats/TramoSeatsSpec"))
-    dspec<-rjd3tramoseats::jd2r_spec_tramoseats(.jcast(jdspec, "demetra/tramoseats/TramoSeatsSpec"))
+    spec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jspec, "demetra/tramoseats/TramoSeatsSpec"))
+    dspec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jdspec, "demetra/tramoseats/TramoSeatsSpec"))
     if (! is.jnull(jrslt)){
       rslt<-rjd3tramoseats::.tramoseats_rslts(.jcast(jrslt, "jdplus/tramoseats/TramoSeatsResults"))
       jpspec<-.jcall(jestimation, "Ldemetra/sa/SaSpecification;", "getPointSpec")
-      pspec<-rjd3tramoseats::jd2r_spec_tramoseats(.jcast(jpspec, "demetra/tramoseats/TramoSeatsSpec"))
+      pspec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jpspec, "demetra/tramoseats/TramoSeatsSpec"))
     }
   }else if (.jinstanceof(jspec, "demetra/x13/X13Spec")){
     spec<-rjd3x13::.jd2r_spec_x13(.jcast(jspec, "demetra/x13/X13Spec"))
