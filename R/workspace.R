@@ -3,49 +3,49 @@ NULL
 
 #' Create a workspace or a multi-processing
 #'
-#' Functions to create a 'JDemetra+' workspace (\code{jws.new()}) and
-#' to add a new multi-processing (\code{jws.multiprocessing.new()}).
+#' Functions to create a 'JDemetra+' workspace (\code{jws_new()}) and
+#' to add a new multi-processing (\code{jws_multiprocessing_new()}).
 #'
 #' @param jws a workspace object.
 #' @param name character name of the new multiprocessing.
 #'
 #' @examples
 #' # To create and export an empty 'JDemetra+' workspace
-#' wk <- .jws.new()
-#' mp <- .jws.multiprocessing.new(wk, "sa1")
+#' wk <- .jws_new()
+#' mp <- .jws_multiprocessing_new(wk, "sa1")
 #'
 #'
-#' @name jws.new
-#' @rdname jws.new
+#' @name jws_new
+#' @rdname jws_new
 #' @export
-.jws.new<-function(modelling_context=NULL){
-    jws<-.jnew("demetra/workspace/r/Ws")
+.jws_new<-function(modelling_context=NULL){
+    jws<-.jnew("jdplus/sa/base/workspace/Ws")
   if (! is.null(modelling_context)){
     jcontext<-rjd3toolkit::.r2jd_modellingcontext(modelling_context)
-    .jcall("demetra/workspace/r/Ws", "V", "setContext", jcontext)
+    .jcall("jdplus/sa/base/workspace/Ws", "V", "setContext", jcontext)
   }
   return (jws)
 }
 
-#' @name jws.new
-#' @rdname jws.new
+#' @name jws_multiprocessing_new
+#' @rdname jws_multiprocessing_new
 #' @export
-.jws.multiprocessing.new<-function(jws, name){
-  return (.jcall(jws, "Ldemetra/workspace/r/MultiProcessing;", "newMultiProcessing", name))
+.jws_multiprocessing_new<-function(jws, name){
+  return (.jcall(jws, "Ljdplus/sa/base/workspace/MultiProcessing;", "newMultiProcessing", name))
 }
 
 
 #' Count the number of objects inside a workspace or multiprocessing
 #'
-#' Functions to count the number of multiprocessing inside a workspace (`jws.multiprocessing.count`) or
-#' the number of SaItem inside a multiprocessing (`jmp.sa.count`).
+#' Functions to count the number of multiprocessing inside a workspace (`jws_multiprocessing_count`) or
+#' the number of SaItem inside a multiprocessing (`jmp_sa_count`).
 #'
 #' @param jws,jmp the workspace or the multiprocessing.
 #'
 #' @name count
 #' @rdname count
 #' @export
-.jws.multiprocessing.count<-function(jws){
+.jws_multiprocessing_count<-function(jws){
   return (.jcall(jws, "I", "getMultiProcessingCount"))
 }
 
@@ -57,8 +57,8 @@ NULL
 #' @param idx index of the object to extract.
 #'
 #' @export
-.jws.multiprocessing<-function(jws, idx){
-  return (.jcall(jws, "Ldemetra/workspace/r/MultiProcessing;", "getMultiProcessing", as.integer(idx-1)))
+.jws_multiprocessing<-function(jws, idx){
+  return (.jcall(jws, "Ljdplus/sa/base/workspace/MultiProcessing;", "getMultiProcessing", as.integer(idx-1)))
 }
 
 
@@ -66,16 +66,16 @@ NULL
 
 #' Load a 'JDemetra+' workpace
 #'
-#' `.jws.open()` loads a workspace and `.jws.compute()` computes it (to be able to get all the models).
+#' `.jws_open()` loads a workspace and `.jws_compute()` computes it (to be able to get all the models).
 #'
 #' @param file the path to the 'JDemetra+' workspace to load.
 #' By default a dialog box opens.
 #' @param jws the workspace.
 #'
-#' @seealso [.jws.load()] to directly load a workspace and import all the models.
+#' @seealso [.jws_load()] to directly load a workspace and import all the models.
 #'
 #' @export
-.jws.open<-function(file){
+.jws_open<-function(file){
   if (missing(file) || is.null(file)) {
     if (Sys.info()[['sysname']] == "Windows") {
       file <- utils::choose.files(caption = "Select a workspace",
@@ -89,13 +89,13 @@ NULL
   if (!file.exists(file) | length(grep("\\.xml$",file)) == 0)
     stop("The file doesn't exist or isn't a .xml file !")
 
-  jws<-.jcall("demetra/workspace/r/Ws", "Ldemetra/workspace/r/Ws;", "open", file)
+  jws<-.jcall("jdplus/sa/base/workspace/Ws", "Ljdplus/sa/base/workspace/Ws;", "open", file)
   return (jws)
 }
 
-#' @name jws.open
+#' @name jws_compute
 #' @export
-.jws.compute<-function(jws){
+.jws_compute<-function(jws){
   .jcall(jws, "V", "computeAll")
 }
 
@@ -104,17 +104,17 @@ NULL
 #' @param jws the workspace.
 #'
 #' @export
-.jws.context<-function(jws){
-  .jcall(jws, "Ldemetra/timeseries/regression/ModellingContext;", "getContext")
+.jws_context<-function(jws){
+  .jcall(jws, "Ljdplus/toolkit/base/api/timeseries/regression/ModellingContext;", "getContext")
 }
 
 
 #' Read all SaItems
 #'
-#' Functions to read all the SAItem ([jsa.read()]) of a multiprocessing (`jmp.load()`)
-#' or a workspace (`.jws.load()`).
+#' Functions to read all the SAItem ([jsa_read()]) of a multiprocessing (`jmp_load()`)
+#' or a workspace (`.jws_load()`).
 #'
-#' @inheritParams jws.open
+#' @inheritParams .jws_open
 #' @param jmp a multiprocessing.
 #'
 #' @export
@@ -132,13 +132,13 @@ load_workspace<-function(file){
   if (!file.exists(file) | length(grep("\\.xml$",file)) == 0)
     stop("The file doesn't exist or isn't a .xml file !")
 
-  jws<-.jws.open(file)
-  .jws.compute(jws)
-  n<-.jws.multiprocessing.count(jws)
-  jmps<-lapply(1:n, function(i){.jmp.load(.jws.multiprocessing(jws,i))})
-  names<-lapply(1:n, function(i){.jmp.name(.jws.multiprocessing(jws, i))})
+  jws<-.jws_open(file)
+  .jws_compute(jws)
+  n<-.jws_multiprocessing_count(jws)
+  jmps<-lapply(1:n, function(i){.jmp_load(.jws_multiprocessing(jws,i))})
+  names<-lapply(1:n, function(i){.jmp_name(.jws_multiprocessing(jws, i))})
   names(jmps)<-names
-  jcntxt<-.jws.context(jws)
+  jcntxt<-.jws_context(jws)
   cntxt<-rjd3toolkit::.jd2r_modellingcontext(jcntxt)
 
   return (list(processing=jmps, context=cntxt))

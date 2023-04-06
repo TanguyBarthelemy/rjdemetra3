@@ -3,8 +3,8 @@ NULL
 
 #' Read SAItem
 #'
-#' `jsa.results()` extracts specific variables of the model of the SAItem while
-#' `jsa.read()` extracts all the informations of a SAItem (see details).
+#' `jsa_results()` extracts specific variables of the model of the SAItem while
+#' `jsa_read()` extracts all the informations of a SAItem (see details).
 #'
 #' @param jsa Java SAItem object.
 #' @param items vector of characters containing the variables to extract.
@@ -19,35 +19,35 @@ NULL
 #' - `pointSpec`: specification corresponding to the results of the current estimation (fully identified model).
 #' - `results`: the result of the model.
 #' @export
-.jsa.read<-function(jsa){
-  jdef<-.jcall(jsa, "Ldemetra/sa/SaDefinition;", "getDefinition")
+.jsa_read<-function(jsa){
+  jdef<-.jcall(jsa, "Ljdplus/sa/base/api/SaDefinition;", "getDefinition")
 
-  jestimation<-.jcall(jsa, "Ldemetra/sa/SaEstimation;", "getEstimation")
+  jestimation<-.jcall(jsa, "Ljdplus/sa/base/api/SaEstimation;", "getEstimation")
   jrslt<-.jnull()
   if (!is.jnull(jestimation)){
-    jrslt<-.jcall(jestimation, "Ldemetra/information/Explorable;", "getResults")
+    jrslt<-.jcall(jestimation, "Ljdplus/toolkit/base/api/information/Explorable;", "getResults")
   }
   # ts
-  jts<-.jcall(jdef, "Ldemetra/timeseries/Ts;", "getTs")
-  rts<-rjd3toolkit::.jd2r_ts(.jcall(jts, "Ldemetra/timeseries/TsData;", "getData"))
+  jts<-.jcall(jdef, "Ljdplus/toolkit/base/api/timeseries/Ts;", "getTs")
+  rts<-rjd3toolkit::.jd2r_ts(.jcall(jts, "Ljdplus/toolkit/base/api/timeseries/TsData;", "getData"))
 
-  jdspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "getDomainSpec")
-  jspec<-.jcall(jdef, "Ldemetra/sa/SaSpecification;", "activeSpecification")
-  if (.jinstanceof(jspec, "demetra/tramoseats/TramoSeatsSpec")){
-    spec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jspec, "demetra/tramoseats/TramoSeatsSpec"))
-    dspec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jdspec, "demetra/tramoseats/TramoSeatsSpec"))
+  jdspec<-.jcall(jdef, "Ljdplus/sa/base/api/SaSpecification;", "getDomainSpec")
+  jspec<-.jcall(jdef, "Ljdplus/sa/base/api/SaSpecification;", "activeSpecification")
+  if (.jinstanceof(jspec, "jdplus/tramoseats/base/api/tramoseats/TramoSeatsSpec")){
+    spec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jspec, "jdplus/tramoseats/base/api/tramoseats/TramoSeatsSpec"))
+    dspec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jdspec, "jdplus/tramoseats/base/api/tramoseats/TramoSeatsSpec"))
     if (! is.jnull(jrslt)){
-      rslt<-rjd3tramoseats::.tramoseats_rslts(.jcast(jrslt, "jdplus/tramoseats/TramoSeatsResults"))
-      jpspec<-.jcall(jestimation, "Ldemetra/sa/SaSpecification;", "getPointSpec")
-      pspec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jpspec, "demetra/tramoseats/TramoSeatsSpec"))
+      rslt<-rjd3tramoseats::.tramoseats_rslts(.jcast(jrslt, "jdplus/tramoseats/base/core/tramoseats/TramoSeatsResults"))
+      jpspec<-.jcall(jestimation, "Ljdplus/sa/base/api/SaSpecification;", "getPointSpec")
+      pspec<-rjd3tramoseats::.jd2r_spec_tramoseats(.jcast(jpspec, "jdplus/tramoseats/base/api/tramoseats/TramoSeatsSpec"))
     }
-  }else if (.jinstanceof(jspec, "demetra/x13/X13Spec")){
-    spec<-rjd3x13::.jd2r_spec_x13(.jcast(jspec, "demetra/x13/X13Spec"))
-    dspec<-rjd3x13::.jd2r_spec_x13(.jcast(jdspec, "demetra/x13/X13Spec"))
+  }else if (.jinstanceof(jspec, "jdplus/x13/base/api/x13/X13Spec")){
+    spec<-rjd3x13::.jd2r_spec_x13(.jcast(jspec, "jdplus/x13/base/api/x13/X13Spec"))
+    dspec<-rjd3x13::.jd2r_spec_x13(.jcast(jdspec, "jdplus/x13/base/api/x13/X13Spec"))
     if (! is.jnull(jrslt)){
-      rslt<-rjd3x13::.x13_rslts(.jcast(jrslt, "jdplus/x13/X13Results"))
-      jpspec<-.jcall(jestimation, "Ldemetra/sa/SaSpecification;", "getPointSpec")
-      pspec<-rjd3x13::.jd2r_spec_x13(.jcast(jpspec, "demetra/x13/X13Spec"))
+      rslt<-rjd3x13::.x13_rslts(.jcast(jrslt, "jdplus/x13/base/core/x13/X13Results"))
+      jpspec<-.jcall(jestimation, "Ljdplus/sa/base/api/SaSpecification;", "getPointSpec")
+      pspec<-rjd3x13::.jd2r_spec_x13(.jcast(jpspec, "jdplus/x13/base/api/x13/X13Spec"))
     }
   }else{
     rslt<-NULL
@@ -63,10 +63,10 @@ NULL
   ))
 }
 
-#' @rdname jsa.read
+#' @rdname jsa_results
 #' @export
-.jsa.results<-function(jsa, items = NULL){
-  jestimation<-.jcall(jsa, "Ldemetra/sa/SaEstimation;", "getEstimation")
+.jsa_results<-function(jsa, items = NULL){
+  jestimation<-.jcall(jsa, "Ljdplus/sa/base/api/SaEstimation;", "getEstimation")
   if (is.jnull(jestimation))
     return (NULL)
   jrslt<-.jcall(jestimation, "Ldemetra/information/Explorable;", "getResults")
@@ -78,9 +78,9 @@ NULL
 }
 
 
-#' @rdname jmp.name
+#' @rdname jsa_name
 #' @export
-.jsa.name<-function(jsa){
+.jsa_name<-function(jsa){
   return (.jcall(jsa, "S", "getName"))
 }
 

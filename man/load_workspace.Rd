@@ -7,9 +7,12 @@
 load_workspace(file)
 }
 \arguments{
+\item{file}{the path to the 'JDemetra+' workspace to load.
+By default a dialog box opens.}
+
 \item{jmp}{a multiprocessing.}
 }
 \description{
-Functions to read all the SAItem ([jsa.read()]) of a multiprocessing (`jmp.load()`)
-or a workspace (`.jws.load()`).
+Functions to read all the SAItem ([jsa_read()]) of a multiprocessing (`jmp_load()`)
+or a workspace (`.jws_load()`).
 }
