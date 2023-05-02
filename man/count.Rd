@@ -14,6 +14,6 @@
 \item{jws, jmp}{the workspace or the multiprocessing.}
 }
 \description{
-Functions to count the number of multiprocessing inside a workspace (`jws_multiprocessing_count`) or
-the number of SaItem inside a multiprocessing (`jmp_sa_count`).
+Functions to count the number of multiprocessing inside a workspace (\code{jws_multiprocessing_count}) or
+the number of SaItem inside a multiprocessing (\code{jmp_sa_count}).
 }
