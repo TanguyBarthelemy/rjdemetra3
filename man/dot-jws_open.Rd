@@ -2,9 +2,12 @@
 % Please edit documentation in R/workspace.R
 \name{.jws_open}
 \alias{.jws_open}
+\alias{.jws_compute}
 \title{Load a 'JDemetra+' workpace}
 \usage{
 .jws_open(file)
+
+.jws_compute(jws)
 }
 \arguments{
 \item{file}{the path to the 'JDemetra+' workspace to load.
@@ -13,8 +16,8 @@ By default a dialog box opens.}
 \item{jws}{the workspace.}
 }
 \description{
-`.jws_open()` loads a workspace and `.jws_compute()` computes it (to be able to get all the models).
+\code{.jws_open()} loads a workspace and \code{.jws_compute()} computes it (to be able to get all the models).
 }
 \seealso{
-[.jws_load()] to directly load a workspace and import all the models.
+\code{\link[=load_workspace]{load_workspace()}} to directly load a workspace and import all the models.
 }

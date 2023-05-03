@@ -3,20 +3,21 @@ NULL
 
 #' Create a workspace or a multi-processing
 #'
-#' Functions to create a 'JDemetra+' workspace (\code{jws_new()}) and
-#' to add a new multi-processing (\code{jws_multiprocessing_new()}).
+#' Functions to create a 'JDemetra+' workspace (\code{.jws_new()}) and
+#' to add a new multi-processing (\code{.jws_multiprocessing_new()}).
 #'
+#' @param modelling_context the context (from [rjd3toolkit::modelling_context()]).
 #' @param jws a workspace object.
 #' @param name character name of the new multiprocessing.
 #'
 #' @examples
-#' # To create and export an empty 'JDemetra+' workspace
+#' # To create an empty 'JDemetra+' workspace
 #' wk <- .jws_new()
 #' mp <- .jws_multiprocessing_new(wk, "sa1")
 #'
 #'
-#' @name jws_new
-#' @rdname jws_new
+#' @name .jws_new
+#' @rdname .jws_new
 #' @export
 .jws_new<-function(modelling_context=NULL){
     jws<-.jnew("jdplus/sa/base/workspace/Ws")
@@ -27,8 +28,7 @@ NULL
   return (jws)
 }
 
-#' @name jws_multiprocessing_new
-#' @rdname jws_multiprocessing_new
+#' @name .jws_new
 #' @export
 .jws_multiprocessing_new<-function(jws, name){
   return (.jcall(jws, "Ljdplus/sa/base/workspace/MultiProcessing;", "newMultiProcessing", name))
@@ -72,7 +72,7 @@ NULL
 #' By default a dialog box opens.
 #' @param jws the workspace.
 #'
-#' @seealso [.jws_load()] to directly load a workspace and import all the models.
+#' @seealso [load_workspace()] to directly load a workspace and import all the models.
 #'
 #' @export
 .jws_open<-function(file){
@@ -93,7 +93,7 @@ NULL
   return (jws)
 }
 
-#' @name jws_compute
+#' @name .jws_open
 #' @export
 .jws_compute<-function(jws){
   .jcall(jws, "V", "computeAll")
@@ -111,8 +111,8 @@ NULL
 
 #' Read all SaItems
 #'
-#' Functions to read all the SAItem ([jsa_read()]) of a multiprocessing (`jmp_load()`)
-#' or a workspace (`.jws_load()`).
+#' Functions to read all the SAItem of a multiprocessing (`jmp_load()`)
+#' or a workspace (`load_workspace()`).
 #'
 #' @inheritParams .jws_open
 #' @param jmp a multiprocessing.
@@ -143,4 +143,24 @@ load_workspace<-function(file){
 
   return (list(processing=jmps, context=cntxt))
 
+}
+
+#' Save Workspace
+#'
+#' @param jws the workspace object to export.
+#' @param file the path where to export the 'JDemetra+' workspace (.xml file).
+#' @param version JDemetra+ version used for the export
+#' @param replace boolean indicating if the workspace should be replaced if it already exists.
+#' @examples
+#' dir <- tempdir()
+#' jws <- .jws_new()
+#' jmp1 <- .jws_multiprocessing_new(jws, "sa1")
+#' y <- rjd3toolkit::ABS$X0.2.09.10.M
+#' add_sa_item(jmp1, name = "x13", x = y, rjd3x13::spec_x13())
+#' save_workspace(jws, file.path(dir, "workspace.xml"))
+#'
+#' @export
+save_workspace <- function(jws, file, version = c("jd3", "jd2"), replace = FALSE) {
+  version <- match.arg(tolower(version)[1], c("jd3", "jd2"))
+  .jcall(jws, "Z", "saveAs", file, version, !replace)
 }
