@@ -91,3 +91,31 @@ add_sa_item.default <- function(jmp, name, x, spec, ...) {
               name = name,
               ...)
 }
+#
+# https://github.com/jdemetra/jdplus-main/blob/develop/jdplus-main-base/jdplus-sa-base-parent/jdplus-sa-base-workspace/src/main/java/jdplus/sa/base/workspace/MultiProcessing.java
+
+
+replace_saitem <- function(jmp, jsa, pos) {
+.jcall(jmp, "V", "set", as.integer(pos), jsa)
+}
+
+set_specification <- function(jmp, spec, pos) {
+  # TODO
+  .jcall(jmp, "V", "setSpecification", as.integer(pos), jspec)
+}
+
+
+set_domain_specification <- function(jmp, spec, pos) {
+  # TODO
+  .jcall(jmp, "V", "setDomainSpecification", as.integer(pos), jspec)
+}
+
+set_ts <- function(jmp, y, pos) {
+  .jcall(jmp, "V", "setData", as.integer(pos), rjd3toolkit::.r2jd_t(y))
+}
+
+remove_sa <- function(jmp, pos) {
+  .jcall(jmp, "V", "remove", as.integer(pos))
+}
+
+

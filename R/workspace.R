@@ -104,8 +104,9 @@ NULL
 #' @param jws the workspace.
 #'
 #' @export
-.jws_context<-function(jws){
-  .jcall(jws, "Ljdplus/toolkit/base/api/timeseries/regression/ModellingContext;", "getContext")
+get_context<-function(jws){
+  jcntxt <- .jcall(jws, "Ljdplus/toolkit/base/api/timeseries/regression/ModellingContext;", "getContext")
+  rjd3toolkit::.jd2r_modellingcontext(jcntxt)
 }
 
 
@@ -138,8 +139,7 @@ load_workspace<-function(file){
   jmps<-lapply(1:n, function(i){.jmp_load(.jws_multiprocessing(jws,i))})
   names<-lapply(1:n, function(i){.jmp_name(.jws_multiprocessing(jws, i))})
   names(jmps)<-names
-  jcntxt<-.jws_context(jws)
-  cntxt<-rjd3toolkit::.jd2r_modellingcontext(jcntxt)
+  cntxt <- get_context(jws)
 
   return (list(processing=jmps, context=cntxt))
 
@@ -164,3 +164,24 @@ save_workspace <- function(jws, file, version = c("jd3", "jd2"), replace = FALSE
   version <- match.arg(tolower(version)[1], c("jd3", "jd2"))
   .jcall(jws, "Z", "saveAs", file, version, !replace)
 }
+
+set_context <- function(jws, context) {
+  jcontext <- rjd3toolkit::.r2jd_modellingcontext(context)
+  .jcall(jws, "V", "setContext", jcontext)
+}
+add_variable <- function(jws, group, name, y) {
+  .jcall(jws, "V", "addVariable", group,
+         name, rjd3toolkit::.r2jd_ts(y))
+}
+
+add_calendar <- function(jws, name, calendar) {
+  pcal<-rjd3toolkit:::.r2p_calendar(calendar)
+  jcal<-rjd3toolkit:::.p2jd_calendar(pcal)
+  # public void addCalendar(String name, CalendarDefinition calendar){
+  #   context.getCalendars().set(name, calendar);
+  # }
+  .jcall(jws, "V", "addVariable", group,
+         name, rjd3toolkit::.r2jd_ts(y))
+}
+
+rjd3toolkit::calendar_td()
