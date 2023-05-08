@@ -16,8 +16,8 @@ By default a dialog box opens.}
 \item{jws}{the workspace.}
 }
 \description{
-\code{.jws_open()} loads a workspace and \code{.jws_compute()} computes it (to be able to get all the models).
+`.jws_open()` loads a workspace and `.jws_compute()` computes it (to be able to get all the models).
 }
 \seealso{
-\code{\link[=load_workspace]{load_workspace()}} to directly load a workspace and import all the models.
+[load_workspace()] to directly load a workspace and import all the models.
 }
