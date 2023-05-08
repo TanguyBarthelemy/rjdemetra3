@@ -13,5 +13,5 @@
 \item{jmp, jsa}{the object to retrieve the name from.}
 }
 \description{
-Functions to retrieve the name of a multiprocessing (\code{.jmp_name()}) or SaItem (\code{.jsa_name()}).
+Functions to retrieve the name of a multiprocessing (`.jmp_name()`) or SaItem (`.jsa_name()`).
 }
