@@ -91,31 +91,58 @@ add_sa_item.default <- function(jmp, name, x, spec, ...) {
               name = name,
               ...)
 }
-#
-# https://github.com/jdemetra/jdplus-main/blob/develop/jdplus-main-base/jdplus-sa-base-parent/jdplus-sa-base-workspace/src/main/java/jdplus/sa/base/workspace/MultiProcessing.java
 
-
-replace_saitem <- function(jmp, jsa, pos) {
-.jcall(jmp, "V", "set", as.integer(pos), jsa)
+#' Replace or Remove a SaItem
+#' `replace_sa_item()` replaces a SaItem of a multiprocessing and `remove_sa_item()` removes a SaItem from a multiprocessing
+#'
+#' @param jmp the multiprocessing.
+#' @param jsa the new SaItem.
+#' @param idx index of the target SaItem.
+#' @export
+replace_sa_item <- function(jmp, jsa, idx) {
+.jcall(jmp, "V", "set", as.integer(idx-1), jsa)
+}
+#' @name replace_sa_item
+#' @export
+remove_sa_item <- function(jmp, idx) {
+  .jcall(jmp, "V", "remove", as.integer(idx-1))
 }
 
-set_specification <- function(jmp, spec, pos) {
-  # TODO
-  .jcall(jmp, "V", "setSpecification", as.integer(pos), jspec)
+#' Set Specification or Data of a SaItem
+#'
+#' @inheritParams replace_sa_item
+#' @param spec the new specification.
+#' @param y the new data.
+#' @export
+set_specification <- function(jmp, spec, idx) {
+  if (inherits(spec, "JD3_X13_SPEC")) {
+    jspec <- rjd3x13::.r2jd_spec_x13(spec)
+  } else if (inherits(spec, "JD3_TRAMOSEATS_SPEC")) {
+    jspec <- rjd3tramoseats::.r2jd_spec_tramoseats(spec)
+  } else {
+    stop("wrong type of spec")
+  }
+  jspec <- .jcast(jspec, "jdplus/sa/base/api/SaSpecification")
+  .jcall(jmp, "V", "setSpecification", as.integer(idx-1), jspec)
+}
+#' @name set_specification
+#' @export
+set_domain_specification <- function(jmp, spec, idx) {
+  if (inherits(spec, "JD3_X13_SPEC")) {
+    jspec <- rjd3x13::.r2jd_spec_x13(spec)
+  } else if (inherits(spec, "JD3_TRAMOSEATS_SPEC")) {
+    jspec <- rjd3tramoseats::.r2jd_spec_tramoseats(spec)
+  } else {
+    stop("wrong type of spec")
+  }
+  jspec <- .jcast(jspec, "jdplus/sa/base/api/SaSpecification")
+  .jcall(jmp, "V", "setDomainSpecification", as.integer(idx-1), jspec)
+}
+#' @name set_specification
+#'@export
+set_data <- function(jmp, y, idx) {
+  .jcall(jmp, "V", "setData", as.integer(idx-1), rjd3toolkit::.r2jd_ts(y))
 }
 
-
-set_domain_specification <- function(jmp, spec, pos) {
-  # TODO
-  .jcall(jmp, "V", "setDomainSpecification", as.integer(pos), jspec)
-}
-
-set_ts <- function(jmp, y, pos) {
-  .jcall(jmp, "V", "setData", as.integer(pos), rjd3toolkit::.r2jd_t(y))
-}
-
-remove_sa <- function(jmp, pos) {
-  .jcall(jmp, "V", "remove", as.integer(pos))
-}
 
 
