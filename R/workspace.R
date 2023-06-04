@@ -159,7 +159,6 @@ load_workspace<-function(file){
 #' Save Workspace
 #'
 #' @param jws the workspace object to export.
-#' @param version JDemetra+ version used for the export.
 #' @param file the path where to export the 'JDemetra+' workspace (.xml file).
 #' @param replace boolean indicating if the workspace should be replaced if it already exists.
 #' @examples
@@ -171,8 +170,8 @@ load_workspace<-function(file){
 #' save_workspace(jws, file.path(dir, "workspace.xml"))
 #'
 #' @export
-save_workspace <- function(jws, file, version =  c("jd3", "jd2"), replace = FALSE) {
-  version <- match.arg(tolower(version)[1], c("jd3", "jd2"))
+save_workspace <- function(jws, file, replace = FALSE) {
+  # version <- match.arg(tolower(version)[1], c("jd3", "jd2"))
   version <- "jd3"
   .jcall(jws, "Z", "saveAs", file, version, !replace)
 }
