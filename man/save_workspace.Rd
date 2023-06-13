@@ -4,14 +4,12 @@
 \alias{save_workspace}
 \title{Save Workspace}
 \usage{
-save_workspace(jws, file, version = c("jd3", "jd2"), replace = FALSE)
+save_workspace(jws, file, replace = FALSE)
 }
 \arguments{
 \item{jws}{the workspace object to export.}
 
 \item{file}{the path where to export the 'JDemetra+' workspace (.xml file).}
-
-\item{version}{JDemetra+ version used for the export}
 
 \item{replace}{boolean indicating if the workspace should be replaced if it already exists.}
 }

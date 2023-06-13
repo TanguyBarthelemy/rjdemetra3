@@ -22,8 +22,7 @@ NULL
 .jws_new<-function(modelling_context=NULL){
     jws<-.jnew("jdplus/sa/base/workspace/Ws")
   if (! is.null(modelling_context)){
-    jcontext<-rjd3toolkit::.r2jd_modellingcontext(modelling_context)
-    .jcall("jdplus/sa/base/workspace/Ws", "V", "setContext", jcontext)
+    set_context(jws, modelling_context)
   }
   return (jws)
 }
@@ -34,6 +33,26 @@ NULL
   return (.jcall(jws, "Ljdplus/sa/base/workspace/MultiProcessing;", "newMultiProcessing", name))
 }
 
+#' Set Context of a Workspace
+#'
+#' @inheritParams .jws_new
+#' @inheritParams .jws_open
+#' @export
+set_context <- function(jws, modelling_context = NULL) {
+  if (!is.null(set_context)) {
+    jcontext <- rjd3toolkit::.r2jd_modellingcontext(modelling_context)
+    .jcall(jws, "V", "setContext", jcontext)
+  }
+}
+#' Get Context from Workspace
+#'
+#' @param jws the workspace.
+#'
+#' @export
+get_context<-function(jws){
+  jcntxt <- .jcall(jws, "Ljdplus/toolkit/base/api/timeseries/regression/ModellingContext;", "getContext")
+  rjd3toolkit::.jd2r_modellingcontext(jcntxt)
+}
 
 #' Count the number of objects inside a workspace or multiprocessing
 #'
@@ -99,14 +118,7 @@ NULL
   .jcall(jws, "V", "computeAll")
 }
 
-#' Get The context from Workspace
-#'
-#' @param jws the workspace.
-#'
-#' @export
-.jws_context<-function(jws){
-  .jcall(jws, "Ljdplus/toolkit/base/api/timeseries/regression/ModellingContext;", "getContext")
-}
+
 
 
 #' Read all SaItems
@@ -138,8 +150,7 @@ load_workspace<-function(file){
   jmps<-lapply(1:n, function(i){.jmp_load(.jws_multiprocessing(jws,i))})
   names<-lapply(1:n, function(i){.jmp_name(.jws_multiprocessing(jws, i))})
   names(jmps)<-names
-  jcntxt<-.jws_context(jws)
-  cntxt<-rjd3toolkit::.jd2r_modellingcontext(jcntxt)
+  cntxt <- get_context(jws)
 
   return (list(processing=jmps, context=cntxt))
 
@@ -149,7 +160,6 @@ load_workspace<-function(file){
 #'
 #' @param jws the workspace object to export.
 #' @param file the path where to export the 'JDemetra+' workspace (.xml file).
-#' @param version JDemetra+ version used for the export
 #' @param replace boolean indicating if the workspace should be replaced if it already exists.
 #' @examples
 #' dir <- tempdir()
@@ -160,7 +170,37 @@ load_workspace<-function(file){
 #' save_workspace(jws, file.path(dir, "workspace.xml"))
 #'
 #' @export
-save_workspace <- function(jws, file, version = c("jd3", "jd2"), replace = FALSE) {
-  version <- match.arg(tolower(version)[1], c("jd3", "jd2"))
+save_workspace <- function(jws, file, replace = FALSE) {
+  # version <- match.arg(tolower(version)[1], c("jd3", "jd2"))
+  version <- "jd3"
   .jcall(jws, "Z", "saveAs", file, version, !replace)
+}
+
+
+
+#' Add Calendar to Workspace
+#'
+#' @inheritParams set_context
+#' @param name the name of the calendar to add.
+#' @param calendar the calendar to add.
+#' @export
+add_calendar <- function(jws, name, calendar) {
+  pcal<-rjd3toolkit:::.r2p_calendar(calendar)
+  jcal<-rjd3toolkit:::.p2jd_calendar(pcal)
+  jcal <- .jcast(jcal, "jdplus/toolkit/base/api/timeseries/calendars/CalendarDefinition")
+
+  .jcall(jws, "V", "addCalendar",
+         name,
+         jcal)
+}
+
+#' Add Variable to Workspace
+#'
+#' @inheritParams set_context
+#' @param group,name the group and the name of the variable to add.
+#' @param y the variable (a `ts` object).
+#' @export
+add_variable <- function(jws, group, name, y) {
+  .jcall(jws, "V", "addVariable", group,
+         name, rjd3toolkit::.r2jd_ts(y))
 }
