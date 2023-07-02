@@ -13,8 +13,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-# RJDemetra3
+[![deprecated](http://badges.github.io/stability-badges/dist/deprecated.svg)](http://github.com/badges/stability-badges) 
 
+# RJDemetra3 (Old Repository) [DEPRECATED]
+
+**Important:** This repository is now deprecated and no longer maintained. Please refer to the [new repository](https://github.com/rjdemetra/rjdemetra3) for the latest developments, issues, and pull requests.
+
+## New Repository
+
+The development of this project has been moved to a new repository that offers an improved structure, additional features, and regular updates. Please follow the link below to access the new repository:
+
+🔗 [New Repository](https://github.com/rjdemetra/rjdemetra3) : https://github.com/rjdemetra/rjdemetra3
+
+## Overview
 
 RJDemetra3 is an R interface to JDemetra+, the seasonal adjustment software [officially recommended](https://ec.europa.eu/eurostat/cros/system/files/Jdemetra_%20release.pdf) to the members of the European Statistical System (ESS) and the European System of Central Banks. JDemetra+ implements the two leading seasonal adjustment methods [TRAMO/SEATS+](http://gretl.sourceforge.net/tramo/tramo-seats.html) and [X-12ARIMA/X-13ARIMA-SEATS](https://www.census.gov/srd/www/x13as/).
 
